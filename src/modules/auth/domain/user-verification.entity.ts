@@ -1,0 +1,59 @@
+import { AggregateRoot } from '@src/libs/ddd';
+import { AggregateId } from '@src/libs/ddd';
+import { randomUUID } from 'crypto';
+import { UserVerificationCreatedDomainEvent } from './events/user-verification-created.domain-event';
+import {
+  CreateUserVerificationProps,
+  UserVerificationProps,
+  VerificationStatus,
+} from './auth.types';
+import { UserVerifiedDomainEvent } from './events/user-verified.domain-event';
+import {
+  UserAlreadyVerifiedError,
+  UserVerificationMismatchError,
+} from '../auth.errors';
+
+export class UserVerificationEntity extends AggregateRoot<UserVerificationProps> {
+  protected readonly _id: AggregateId;
+
+  static create(create: CreateUserVerificationProps): UserVerificationEntity {
+    const id = randomUUID();
+    const props: UserVerificationProps = {
+      userId: create.userId,
+      status: VerificationStatus.pending,
+    };
+
+    const verification = new UserVerificationEntity({
+      id,
+      props,
+    });
+
+    verification.addEvent(
+      new UserVerificationCreatedDomainEvent({
+        aggregateId: id,
+        userId: props.userId,
+        status: props.status,
+        token: create.token,
+      }),
+    );
+
+    return verification;
+  }
+
+  verify(userId: string): void {
+    if (this.props.status === VerificationStatus.verified)
+      throw new UserAlreadyVerifiedError();
+    if (this.props.userId !== userId) throw new UserVerificationMismatchError();
+
+    this.addEvent(
+      new UserVerifiedDomainEvent({
+        aggregateId: this.id,
+        userId,
+      }),
+    );
+
+    this.props.status = VerificationStatus.verified;
+  }
+
+  public validate(): void {}
+}

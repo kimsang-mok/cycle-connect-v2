@@ -46,9 +46,12 @@ export abstract class SqlRepositoryBase<
     return this.appContext.getEntityManager();
   }
 
+  protected get repository() {
+    return this.manager.getRepository<OrmEntity>(this.entityClass);
+  }
+
   async findOneById(id: string | number): Promise<DomainEntity | null> {
-    const repo = this.manager.getRepository<OrmEntity>(this.entityClass);
-    const entity = await repo.findOne({
+    const entity = await this.repository.findOne({
       where: { id } as any,
     } as FindOneOptions<OrmEntity>);
     return entity ? this.mapper.toDomain(entity) : null;
@@ -57,8 +60,7 @@ export abstract class SqlRepositoryBase<
   async findAll(
     options: FindManyOptions<OrmEntity> = {},
   ): Promise<DomainEntity[]> {
-    const repo = this.manager.getRepository<OrmEntity>(this.entityClass);
-    const entities = await repo.find(options);
+    const entities = await this.repository.find(options);
     return entities.map((entity) => this.mapper.toDomain(entity));
   }
 
@@ -68,13 +70,11 @@ export abstract class SqlRepositoryBase<
   async insert(entity: DomainEntity | DomainEntity[]): Promise<void> {
     const entities = Array.isArray(entity) ? entity : [entity];
 
-    const repo = this.manager.getRepository<OrmEntity>(this.entityClass);
-
     try {
       for (const entity of entities) {
         entity.validate();
         const record = this.mapper.toPersistence(entity);
-        await repo.save(record);
+        await this.repository.save(record);
       }
       await Promise.all(
         entities.map((entity) => this.publishDomainEvent(entity)),
@@ -95,7 +95,7 @@ export abstract class SqlRepositoryBase<
     for (const agg of entities) {
       agg.validate?.();
       const ormEntity = this.mapper.toPersistence(agg);
-      await repo.save(ormEntity);
+      await this.repository.save(ormEntity);
     }
 
     await Promise.all(
@@ -107,8 +107,7 @@ export abstract class SqlRepositoryBase<
 
   async update(entity: DomainEntity): Promise<void> {
     entity.validate();
-    const repo = this.manager.getRepository(this.entityClass);
-    const existing = await repo.findOneBy({ id: entity.id as any });
+    const existing = await this.repository.findOneBy({ id: entity.id as any });
 
     if (!existing) {
       throw new NotFoundException(
@@ -117,14 +116,13 @@ export abstract class SqlRepositoryBase<
     }
 
     const orm = this.mapper.toPersistence(entity);
-    await repo.save(orm);
+    await this.repository.save(orm);
     await this.publishDomainEvent(entity);
   }
 
   async delete(entity: DomainEntity): Promise<boolean> {
     entity.validate();
-    const repo = this.manager.getRepository(this.entityClass);
-    const result = await repo.delete(entity.id);
+    const result = await this.repository.delete(entity.id);
 
     if (result.affected && result.affected > 0) {
       await this.publishDomainEvent(entity);

@@ -18,6 +18,8 @@ import {
   DomainExceptionFilter,
   ValidationExceptionFilter,
 } from './libs/application/filters';
+import { AuthModule } from './modules/auth/auth.module';
+import authConfig from './modules/auth/config/auth.config';
 
 const interceptors: Provider[] = [
   {
@@ -45,7 +47,7 @@ const filters: Provider[] = [
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, authConfig],
       envFilePath: ['.env'],
     }),
     EventEmitterModule.forRoot(),
@@ -59,6 +61,7 @@ const filters: Provider[] = [
 
     // Modules
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],
