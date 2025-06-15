@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import validateConfig from '@src/libs/utils/validate-config';
 import { AuthConfig } from './auth-config.type';
 
@@ -29,6 +29,7 @@ class EnvironmentVariablesValidator {
   AUTH_CONFIRM_EMAIL_TOKEN_EXPIRES_IN: string;
 
   @IsString()
+  @IsOptional()
   COOKIES_EXPIRES_IN: string;
 }
 
@@ -36,13 +37,14 @@ export default registerAs<AuthConfig>('auth', () => {
   validateConfig(process.env, EnvironmentVariablesValidator);
 
   return {
-    secret: process.env.AUTH_JWT_SECRET,
-    expires: process.env.AUTH_JWT_TOKEN_EXPIRES_IN,
-    refreshSecret: process.env.AUTH_REFRESH_SECRET,
-    refreshExpires: process.env.AUTH_REFRESH_TOKEN_EXPIRES_IN,
-    forgotSecret: process.env.AUTH_FORGOT_SECRET,
-    forgotExpires: process.env.AUTH_FORGOT_TOKEN_EXPIRES_IN,
-    confirmEmailSecret: process.env.AUTH_CONFIRM_EMAIL_SECRET,
-    confirmEmailExpires: process.env.AUTH_CONFIRM_EMAIL_TOKEN_EXPIRES_IN,
+    secret: process.env.AUTH_JWT_SECRET!,
+    expires: process.env.AUTH_JWT_TOKEN_EXPIRES_IN!,
+    refreshSecret: process.env.AUTH_REFRESH_SECRET!,
+    refreshExpires: process.env.AUTH_REFRESH_TOKEN_EXPIRES_IN!,
+    forgotSecret: process.env.AUTH_FORGOT_SECRET!,
+    forgotExpires: process.env.AUTH_FORGOT_TOKEN_EXPIRES_IN!,
+    confirmEmailSecret: process.env.AUTH_CONFIRM_EMAIL_SECRET!,
+    confirmEmailExpires: process.env.AUTH_CONFIRM_EMAIL_TOKEN_EXPIRES_IN!,
+    cookiesExpires: process.env.COOKIES_EXPIRES_IN ?? '30',
   };
 });

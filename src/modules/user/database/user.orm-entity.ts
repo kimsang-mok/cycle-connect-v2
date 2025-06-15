@@ -14,10 +14,10 @@ export class UserOrmEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
   @Column()
@@ -33,5 +33,5 @@ export class UserOrmEntity {
     () => UserVerificationOrmEntity,
     (verification) => verification.user,
   )
-  verifications: UserVerificationOrmEntity[];
+  verification: UserVerificationOrmEntity;
 }
