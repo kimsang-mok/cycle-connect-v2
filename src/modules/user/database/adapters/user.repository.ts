@@ -19,6 +19,10 @@ export class UserRepository
   }
 
   async findOneByEmail(email: string): Promise<UserEntity | null> {
-    throw new Error('Not implemented');
+    const entity = await this.repository.findOne({
+      where: { email },
+    });
+
+    return entity ? this.mapper.toDomain(entity) : null;
   }
 }

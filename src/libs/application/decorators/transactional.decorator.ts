@@ -5,8 +5,15 @@ export function Transactional(): MethodDecorator {
     const original = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
-      const appContext = this.appContext ?? AppRequestContext.current;
+      const appContext = AppRequestContext.current;
       const requestId = appContext.getRequestId?.();
+      const isInTransaction =
+        !!appContext.getEntityManager().queryRunner?.isTransactionActive;
+
+      if (isInTransaction) {
+        // already in a transaction: just call the method directly
+        return await original.apply(this, args);
+      }
 
       try {
         console.debug(`[${requestId}] Transaction started`);

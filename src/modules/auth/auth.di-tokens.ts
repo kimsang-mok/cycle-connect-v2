@@ -1,0 +1,7 @@
+export const USER_VERIFICATION_REPOSITORY = Symbol.for(
+  'USER_VERIFICATION_REPOSITORY',
+);
+
+export const SESSION_REPOSITORY = Symbol.for('SESSION_REPOSITORY');
+
+export const COOKIE_SERVICE = Symbol.for('COOKIE_SERVICE');

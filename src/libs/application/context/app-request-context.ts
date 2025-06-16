@@ -63,6 +63,11 @@ export class AppRequestContext {
       throw new Error('No request context available when starting transaction');
     }
 
+    // if already in transaction, reuse it
+    if (currentStore.entityManager) {
+      return await work();
+    }
+
     return this.dataSource.manager.transaction(async (transactionManager) => {
       const transactionalContext: RequestContextStore = {
         ...currentStore,

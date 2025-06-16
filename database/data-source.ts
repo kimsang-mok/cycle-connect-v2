@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -25,7 +24,6 @@ export const AppDataSource = new DataSource({
     entitiesDir: 'src',
     subscribersDir: 'subscriber',
   },
-  namingStrategy: new SnakeNamingStrategy(),
   extra: {
     // based on https://node-postgres.com/api/pool
     // max connection pool size

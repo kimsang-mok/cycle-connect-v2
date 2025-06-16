@@ -18,6 +18,10 @@ import {
   DomainExceptionFilter,
   ValidationExceptionFilter,
 } from './libs/application/filters';
+import { AuthModule } from './modules/auth/auth.module';
+import authConfig from './modules/auth/config/auth.config';
+import mailerConfig from './libs/mailer/config/mailer.config';
+import { NotificationModule } from './modules/notification/notification.module';
 
 const interceptors: Provider[] = [
   {
@@ -45,7 +49,7 @@ const filters: Provider[] = [
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, authConfig, mailerConfig],
       envFilePath: ['.env'],
     }),
     EventEmitterModule.forRoot(),
@@ -59,6 +63,8 @@ const filters: Provider[] = [
 
     // Modules
     UserModule,
+    AuthModule,
+    NotificationModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],
