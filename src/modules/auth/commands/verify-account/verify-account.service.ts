@@ -48,11 +48,13 @@ export class VerifyAccountService
 
     await this.userVerificationRepo.update(verification);
 
+    const user = await this.authenticateUserService.getUserById(userId);
+
     const result = await this.authenticateUserService.execute({
-      userId,
+      user,
       cookies: { jwt: undefined },
     });
 
-    return result;
+    return { user, ...result };
   }
 }

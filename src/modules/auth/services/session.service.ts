@@ -56,12 +56,11 @@ export class SessionService {
     return this.sessionRepo.deleteByRefreshToken(conditions.refreshToken);
   }
 
-  async update(id: string, payload: UpdateSessionProps): Promise<void> {
-    const session = await this.sessionRepo.findOneById(id);
-
-    if (session) {
-      session.update(payload);
-      return this.sessionRepo.update(session);
-    }
+  async update(
+    session: SessionEntity,
+    payload: UpdateSessionProps,
+  ): Promise<void> {
+    session.update(payload);
+    return this.sessionRepo.update(session);
   }
 }

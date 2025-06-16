@@ -21,8 +21,17 @@ import { CookieService } from './libs/cookies/cookies.service';
 import { RegisterUserController } from './commands/register-user/register-user.controller';
 import { JwtStrategy } from './libs/strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './libs/strategies/jwt-refresh.strategy';
+import { LoginUserService } from './commands/login-user/login-user.service';
+import { LoginUserController } from './commands/login-user/login-user.controller';
+import { RefreshTokenService } from './commands/refresh-token/refresh-token.service';
+import { RefreshTokenController } from './commands/refresh-token/refresh-token.controller';
 
-const controllers = [RegisterUserController, VerifyAccountController];
+const controllers = [
+  RegisterUserController,
+  VerifyAccountController,
+  LoginUserController,
+  RefreshTokenController,
+];
 
 const services: Provider[] = [
   SessionService,
@@ -33,7 +42,11 @@ const services: Provider[] = [
   },
 ];
 
-const commandHandlers: Provider[] = [VerifyAccountService];
+const commandHandlers: Provider[] = [
+  VerifyAccountService,
+  LoginUserService,
+  RefreshTokenService,
+];
 
 const eventHandlers: Provider[] = [
   CreateUserVerificationWhenUserIsCreatedDomainEventHandler,

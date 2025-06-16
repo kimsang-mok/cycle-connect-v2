@@ -26,21 +26,26 @@ export class AuthenticateUserService {
     private readonly sessionService: SessionService,
   ) {}
 
-  async execute({
-    cookies,
-    userId,
-  }: {
-    cookies: { jwt?: string };
-    userId: string;
-  }) {
-    const user = await this.userRepo.findOneById(userId);
+  async getUserById(id: string): Promise<UserEntity> {
+    const user = await this.userRepo.findOneById(id);
 
     if (!user) {
       throw new UserNotFoundError();
     }
 
-    const verification =
-      await this.userVerificationRepo.findOneByUserId(userId);
+    return user;
+  }
+
+  async execute({
+    cookies,
+    user,
+  }: {
+    cookies: { jwt?: string };
+    user: UserEntity;
+  }) {
+    const verification = await this.userVerificationRepo.findOneByUserId(
+      user.id,
+    );
 
     if (verification.getProps().status === VerificationStatus.pending) {
       throw new AccountNotVerifiedError();
@@ -67,7 +72,7 @@ export class AuthenticateUserService {
       refreshToken,
     });
 
-    return { user, accessToken, refreshToken };
+    return { accessToken, refreshToken };
   }
 
   async getTokensData({
