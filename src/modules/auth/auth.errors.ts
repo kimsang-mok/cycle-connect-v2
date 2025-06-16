@@ -24,9 +24,3 @@ export const UserAlreadyVerifiedError = defineDomainError({
   code: 'AUTH.USER_ALREADY_VERIFIED',
   status: HttpStatus.CONFLICT,
 });
-
-export const UserVerificationMismatchError = defineDomainError({
-  message: 'Verification attempted by a mismatched user',
-  code: 'AUTH.VERIFICATION_MISMATCH',
-  status: HttpStatus.FORBIDDEN,
-});

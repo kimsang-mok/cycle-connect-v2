@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UserCreatedDomainEvent } from '@src/modules/user/domain/events/user-created.domain-event';
 import { USER_VERIFICATION_REPOSITORY } from '../auth.di-tokens';
@@ -9,6 +9,10 @@ import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from '@src/configs/config.type';
 
 export class CreateUserVerificationWhenUserIsCreatedDomainEventHandler {
+  private readonly logger = new Logger(
+    CreateUserVerificationWhenUserIsCreatedDomainEventHandler.name,
+  );
+
   constructor(
     @Inject(USER_VERIFICATION_REPOSITORY)
     private readonly userVerificationRepo: UserVerificationRepositoryPort,
@@ -16,9 +20,7 @@ export class CreateUserVerificationWhenUserIsCreatedDomainEventHandler {
     private readonly configService: ConfigService<AllConfigType>,
   ) {}
 
-  @OnEvent(UserCreatedDomainEvent.name, {
-    suppressErrors: false,
-  })
+  @OnEvent(UserCreatedDomainEvent.name, { suppressErrors: false })
   async handle(event: UserCreatedDomainEvent): Promise<any> {
     const token = await this.jwtService.signAsync(
       { confirmEmailUserId: event.aggregateId },
@@ -36,6 +38,8 @@ export class CreateUserVerificationWhenUserIsCreatedDomainEventHandler {
       userId: event.aggregateId,
       token,
     });
+
+    this.logger.log('Token: ', token);
 
     await this.userVerificationRepo.insert(verification);
   }

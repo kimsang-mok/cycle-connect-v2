@@ -1,5 +1,9 @@
 import { AggregateId, AggregateRoot } from '@src/libs/ddd';
-import { CreateSessionProps, SessionProps } from './auth.types';
+import {
+  CreateSessionProps,
+  SessionProps,
+  UpdateSessionProps,
+} from './auth.types';
 import { randomUUID } from 'crypto';
 
 export class SessionEntity extends AggregateRoot<SessionProps> {
@@ -11,6 +15,11 @@ export class SessionEntity extends AggregateRoot<SessionProps> {
     const session = new SessionEntity({ id, props });
 
     return session;
+  }
+
+  update(props: UpdateSessionProps) {
+    this.props.accessToken = props.accessToken;
+    this.props.refreshToken = props.refreshToken;
   }
 
   public validate(): void {}

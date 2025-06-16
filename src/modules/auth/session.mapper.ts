@@ -1,7 +1,9 @@
 import { Mapper } from '@src/libs/ddd';
 import { SessionEntity } from './domain/session.entity';
 import { SessionOrmEntity } from './database/session.orm-entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SessionMapper
   implements Mapper<SessionEntity, SessionOrmEntity, never>
 {

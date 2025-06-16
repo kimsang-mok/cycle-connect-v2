@@ -8,10 +8,7 @@ import {
   VerificationStatus,
 } from './auth.types';
 import { UserVerifiedDomainEvent } from './events/user-verified.domain-event';
-import {
-  UserAlreadyVerifiedError,
-  UserVerificationMismatchError,
-} from '../auth.errors';
+import { UserAlreadyVerifiedError } from '../auth.errors';
 
 export class UserVerificationEntity extends AggregateRoot<UserVerificationProps> {
   protected readonly _id: AggregateId;
@@ -40,19 +37,19 @@ export class UserVerificationEntity extends AggregateRoot<UserVerificationProps>
     return verification;
   }
 
-  verify(userId: string): void {
+  verify(): void {
     if (this.props.status === VerificationStatus.verified)
       throw new UserAlreadyVerifiedError();
-    if (this.props.userId !== userId) throw new UserVerificationMismatchError();
 
     this.addEvent(
       new UserVerifiedDomainEvent({
         aggregateId: this.id,
-        userId,
+        userId: this.props.userId,
       }),
     );
 
     this.props.status = VerificationStatus.verified;
+    this.props.verifiedAt = new Date();
   }
 
   public validate(): void {}

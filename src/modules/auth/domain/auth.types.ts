@@ -1,3 +1,5 @@
+import { UserEntity } from '@src/modules/user/domain/user.entity';
+
 export enum VerificationStatus {
   pending = 'pending',
   verified = 'verified',
@@ -21,3 +23,14 @@ export interface SessionProps {
 }
 
 export type CreateSessionProps = SessionProps;
+
+export type UpdateSessionProps = Pick<
+  SessionProps,
+  'accessToken' | 'refreshToken'
+>;
+
+export type AuthenticateUserReturnType = {
+  user: UserEntity;
+  accessToken: string;
+  refreshToken: string;
+};

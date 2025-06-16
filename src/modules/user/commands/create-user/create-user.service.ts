@@ -7,8 +7,8 @@ import { ConflictException } from '@src/libs/exceptions';
 import { USER_REPOSITORY } from '../../user.di-tokens';
 import { UserRepositoryPort } from '../../database/ports/user.repository.port';
 import { UserEntity } from '../../domain/user.entity';
-import { Email } from '../../value-objects/email.value-object';
-import { Password } from '../../value-objects/password.value-object';
+import { Email } from '../../domain/value-objects/email.value-object';
+import { Password } from '../../domain/value-objects/password.value-object';
 import { Transactional } from '@src/libs/application/decorators/transactional.decorator';
 
 @CommandHandler(CreateUserCommand)

@@ -74,7 +74,7 @@ export abstract class SqlRepositoryBase<
       for (const entity of entities) {
         entity.validate();
         const record = this.mapper.toPersistence(entity);
-        await this.repository.save(record);
+        await this.repository.insert(record);
       }
       await Promise.all(
         entities.map((entity) => this.publishDomainEvent(entity)),
@@ -107,16 +107,16 @@ export abstract class SqlRepositoryBase<
 
   async update(entity: DomainEntity): Promise<void> {
     entity.validate();
-    const existing = await this.repository.findOneBy({ id: entity.id as any });
 
-    if (!existing) {
-      throw new NotFoundException(
-        `Cannot update non-existing entity ${entity.id}`,
-      );
+    const result = await this.repository.update(
+      entity.id,
+      this.mapper.toPersistence(entity),
+    );
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Entity ${entity.id} not found`);
     }
 
-    const orm = this.mapper.toPersistence(entity);
-    await this.repository.save(orm);
     await this.publishDomainEvent(entity);
   }
 
@@ -131,7 +131,7 @@ export abstract class SqlRepositoryBase<
     return false;
   }
 
-  protected async publishDomainEvent(entity: DomainEntity) {
+  async publishDomainEvent(entity: DomainEntity) {
     return entity.publishEvents(this.requestId, this.logger, this.eventEmitter);
   }
 

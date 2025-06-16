@@ -4,9 +4,10 @@ import { SessionOrmEntity } from '../session.orm-entity';
 import { SessionRepositoryPort } from '../ports/session.repository.port';
 import { SessionMapper } from '../../session.mapper';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { NotFoundException } from '@src/libs/exceptions';
 
+@Injectable()
 export class SessionRepository
   extends SqlRepositoryBase<SessionEntity, SessionOrmEntity>
   implements SessionRepositoryPort

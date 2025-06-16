@@ -6,6 +6,7 @@
 // Root
 
 const usersRoot = 'users';
+const authRoot = 'auth';
 
 // Api Versions
 const v1 = 'v1';
@@ -15,5 +16,11 @@ export const routesV1 = {
   user: {
     tag: 'User',
     root: usersRoot,
+  },
+  auth: {
+    tag: 'Auth',
+    root: authRoot,
+    register: `${authRoot}/register`,
+    verify: `${authRoot}/verify`,
   },
 };

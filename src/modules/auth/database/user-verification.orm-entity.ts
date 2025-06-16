@@ -1,12 +1,4 @@
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  CreateDateColumn,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm';
-import { UserOrmEntity } from '../../user/database/user.orm-entity'; // Adjust path if necessary
+import { Entity, PrimaryColumn, Column, CreateDateColumn } from 'typeorm';
 import { VerificationStatus } from '../domain/auth.types';
 
 @Entity({ name: 'user_verifications' })
@@ -16,12 +8,6 @@ export class UserVerificationOrmEntity {
 
   @Column({ type: 'uuid' })
   userId: string;
-
-  @OneToOne(() => UserOrmEntity, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'user_id' })
-  user: UserOrmEntity;
 
   @Column({
     type: 'enum',

@@ -4,10 +4,8 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
 } from 'typeorm';
 import { UserRoles } from '../domain/user.types';
-import { UserVerificationOrmEntity } from '@src/modules/auth/database/user-verification.orm-entity';
 
 @Entity({ name: 'users' })
 export class UserOrmEntity {
@@ -28,10 +26,4 @@ export class UserOrmEntity {
 
   @Column({ type: 'enum', enum: UserRoles })
   role: UserRoles;
-
-  @OneToOne(
-    () => UserVerificationOrmEntity,
-    (verification) => verification.user,
-  )
-  verification: UserVerificationOrmEntity;
 }

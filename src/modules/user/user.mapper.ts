@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Mapper } from '@src/libs/ddd';
 import { UserEntity } from './domain/user.entity';
 import { UserResponseDto } from './dtos/user.response.dto';
-import { Email } from './value-objects/email.value-object';
-import { Password } from './value-objects/password.value-object';
+import { Email } from './domain/value-objects/email.value-object';
+import { Password } from './domain/value-objects/password.value-object';
 import { UserOrmEntity } from './database/user.orm-entity';
 
 @Injectable()

@@ -6,9 +6,8 @@ import { CreateUserService } from './commands/create-user/create-user.service';
 import { UserMapper } from './user.mapper';
 import { CqrsModule } from '@nestjs/cqrs';
 import { USER_REPOSITORY } from './user.di-tokens';
-import { CreateUserController } from './commands/create-user/create-user.controller';
 
-const controllers = [CreateUserController];
+const controllers = [];
 
 const commandHandlers: Provider[] = [CreateUserService];
 
