@@ -1,4 +1,5 @@
 import { UserEntity } from '@src/modules/user/domain/user.entity';
+import { Email } from '@src/modules/user/domain/value-objects/email.value-object';
 
 export enum VerificationStatus {
   pending = 'pending',
@@ -14,6 +15,7 @@ export interface UserVerificationProps {
 export interface CreateUserVerificationProps {
   userId: string;
   token: string;
+  email: Email;
 }
 
 export interface SessionProps {

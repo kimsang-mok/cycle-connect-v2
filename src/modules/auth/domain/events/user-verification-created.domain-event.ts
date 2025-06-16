@@ -1,17 +1,14 @@
 import { DomainEvent, DomainEventProps } from '@src/libs/ddd';
-import { VerificationStatus } from '../auth.types';
+import { Email } from '@src/modules/user/domain/value-objects/email.value-object';
 
 export class UserVerificationCreatedDomainEvent extends DomainEvent {
-  readonly userId: string;
-
-  readonly status: VerificationStatus;
-
   readonly token: string;
+
+  readonly email: Email;
 
   constructor(props: DomainEventProps<UserVerificationCreatedDomainEvent>) {
     super(props);
-    this.userId = props.userId;
-    this.status = props.status;
     this.token = props.token;
+    this.email = props.email;
   }
 }

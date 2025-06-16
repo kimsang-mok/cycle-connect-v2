@@ -28,8 +28,7 @@ export class UserVerificationEntity extends AggregateRoot<UserVerificationProps>
     verification.addEvent(
       new UserVerificationCreatedDomainEvent({
         aggregateId: id,
-        userId: props.userId,
-        status: props.status,
+        email: create.email,
         token: create.token,
       }),
     );

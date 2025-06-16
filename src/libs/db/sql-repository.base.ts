@@ -91,18 +91,6 @@ export abstract class SqlRepositoryBase<
       }
       throw error;
     }
-
-    for (const agg of entities) {
-      agg.validate?.();
-      const ormEntity = this.mapper.toPersistence(agg);
-      await this.repository.save(ormEntity);
-    }
-
-    await Promise.all(
-      entities.map((entity) => {
-        this.publishDomainEvent(entity);
-      }),
-    );
   }
 
   async update(entity: DomainEntity): Promise<void> {

@@ -36,6 +36,7 @@ export class CreateUserVerificationWhenUserIsCreatedDomainEventHandler {
 
     const verification = UserVerificationEntity.create({
       userId: event.aggregateId,
+      email: event.email,
       token,
     });
 
