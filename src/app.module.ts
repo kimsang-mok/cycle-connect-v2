@@ -22,6 +22,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import authConfig from './modules/auth/config/auth.config';
 import mailerConfig from './libs/mailer/config/mailer.config';
 import { NotificationModule } from './modules/notification/notification.module';
+import { getEnvFilePath } from './libs/utils/get-env-path';
 
 const interceptors: Provider[] = [
   {
@@ -50,7 +51,7 @@ const filters: Provider[] = [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, databaseConfig, authConfig, mailerConfig],
-      envFilePath: ['.env'],
+      envFilePath: getEnvFilePath(),
     }),
     EventEmitterModule.forRoot(),
     TypeOrmModule.forRootAsync({
