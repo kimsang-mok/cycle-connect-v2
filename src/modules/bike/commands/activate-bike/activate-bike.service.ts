@@ -28,7 +28,7 @@ export class ActivateBikeService
     }
 
     bike.activate();
-    await this.bikeRepo.insert(bike);
+    await this.bikeRepo.update(bike);
 
     return bike.id;
   }

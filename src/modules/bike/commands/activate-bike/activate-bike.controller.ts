@@ -9,8 +9,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-// import { JwtAuthGuard } from '@src/modules/auth/libs/guard/jwt-auth-guard';
-// import { RolesGuard } from '@src/modules/auth/libs/guard/roles.guard';
+import { JwtAuthGuard } from '@src/modules/auth/libs/guard/jwt-auth-guard';
+import { RolesGuard } from '@src/modules/auth/libs/guard/roles.guard';
+import { Roles } from '@src/modules/auth/roles.decorator';
+import { UserRoles } from '@src/modules/user/domain/user.types';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.bike.tag)
@@ -18,7 +20,8 @@ export class ActivateBikeController {
   constructor(private commandBus: CommandBus) {}
 
   @Patch(routesV1.bike.activate)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRoles.admin, UserRoles.renter)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Activate a bike',
     description:
@@ -33,7 +36,7 @@ export class ActivateBikeController {
   async activate(@Param('id') id: string, @Request() request) {
     // console.log(request.user);
     const command = new ActivateBikeCommand({
-      requesterId: '65e4afb3-4f9d-42b8-8025-f64d6c87013b',
+      requesterId: request.user.id,
       bikeId: id,
     });
 
