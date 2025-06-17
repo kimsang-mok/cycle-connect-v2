@@ -15,7 +15,6 @@ export class CreateBikeService
     @Inject(BIKE_REPOSITORY)
     protected readonly bikeRepo: BikeRepositoryPort,
   ) {}
-
   @Transactional()
   async execute(command: CreateBikeCommand): Promise<string> {
     const bike = BikeEntity.create({

@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { BikeTypes } from '../domain/bike.types';
 
-@Entity({ name: 'bike' })
+@Entity({ name: 'bikes' })
 export class BikeOrmEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

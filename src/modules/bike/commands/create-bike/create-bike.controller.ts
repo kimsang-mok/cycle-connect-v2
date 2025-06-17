@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateBikeRequestDto } from './create-bike.request.dto';
 import { CreateBikeCommand } from './create-bike.command';
@@ -12,8 +12,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@src/modules/auth/libs/guard/jwt-auth-guard';
-import { RolesGuard } from '@src/modules/auth/libs/guard/roles.guard';
+// import { JwtAuthGuard } from '@src/modules/auth/libs/guard/jwt-auth-guard';
+// import { RolesGuard } from '@src/modules/auth/libs/guard/roles.guard';
 import { Price } from '../../domain/value-objects/price.value-object';
 
 @Controller(routesV1.version)
@@ -21,8 +21,9 @@ import { Price } from '../../domain/value-objects/price.value-object';
 export class CreateBikeController {
   constructor(private commandBus: CommandBus) {}
 
+  // Todo: Update Roles Guards
   @Post(routesV1.bike.root)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Create a new bike listing' })
   @ApiBearerAuth()
   @ApiBody({ type: CreateBikeRequestDto })
@@ -30,10 +31,11 @@ export class CreateBikeController {
     description: 'Bike created successfully',
     type: IdResponse,
   })
-  async create(@Body() body: CreateBikeRequestDto, @Request() request) {
+  async create(@Body() body: CreateBikeRequestDto) {
+    // Todo: to update ownerId to the actual authenticated user ID
     const command = new CreateBikeCommand({
       ...body,
-      ownerId: request.user.id,
+      ownerId: '65e4afb3-4f9d-42b8-8025-f64d6c87013b',
       pricePerDay: new Price(body.pricePerDay),
     });
 
