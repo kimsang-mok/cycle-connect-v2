@@ -1,5 +1,7 @@
+import { ValueObject } from '@src/libs/ddd';
+
 /**
- * creates a jest mock for all methods and accessors of a given class.
+ * create a jest mock for all methods and accessors of a given class.
  *
  * @example
  * class UserService {
@@ -8,7 +10,6 @@
  * const mock = mockClassMethods(UserService);
  * mock.getUser.mockReturnValue('mocked');
  */
-
 export function mockClassMethods<T extends new (...args: any[]) => any>(
   ClassConstructor: T,
   overrides: Partial<jest.Mocked<InstanceType<T>>> = {},
@@ -40,7 +41,7 @@ export function mockClassMethods<T extends new (...args: any[]) => any>(
 }
 
 /**
- * creates a jest mock for any interface or plain object using Proxy.
+ * create a jest mock for any interface or plain object using Proxy.
  * any accessed property is auto-mocked with a `jest.fn()` unless already provided via overrides.
  *
  * @example
@@ -50,7 +51,6 @@ export function mockClassMethods<T extends new (...args: any[]) => any>(
  * const mock = mockInterface<EmailService>();
  * mock.sendEmail.mockResolvedValue();
  */
-
 export function mockInterface<T extends object>(
   overrides: Partial<jest.Mocked<T>> = {},
 ): jest.Mocked<T> {
@@ -83,4 +83,73 @@ export function asMock<T extends (...args: any[]) => any>(
   fn: T,
 ): jest.Mock<ReturnType<T>, Parameters<T>> {
   return fn as unknown as jest.Mock<ReturnType<T>, Parameters<T>>;
+}
+
+/**
+ * mock AggregateRoot, allowing overrides on methods or props.
+ *
+ * @example
+ * const mock = mockAggregateRoot(UserEntity, {
+ *   email: 'test@example.com',
+ *   role: UserRoles.admin,
+ * });
+ */
+export function mockAggregateRoot<T extends new (...args: any[]) => any>(
+  ClassConstructor: T,
+  propsOverride: Partial<ReturnType<InstanceType<T>['getProps']>> = {},
+  methodOverrides: Partial<jest.Mocked<InstanceType<T>>> = {},
+): jest.Mocked<InstanceType<T>> {
+  const mock = {
+    validate: jest.fn(),
+    getProps: jest.fn().mockReturnValue({
+      id: 'mock-id',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      ...propsOverride,
+    }),
+    toObject: jest.fn().mockReturnValue({
+      id: 'mock-id',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      ...propsOverride,
+    }),
+    addEvent: jest.fn(),
+    clearEvents: jest.fn(),
+    publishEvents: jest.fn(),
+    ...methodOverrides,
+  };
+
+  return mock as jest.Mocked<InstanceType<T>>;
+}
+
+/**
+ * create a mock instance of a ValueObject subclass.
+ *
+ * @example
+ * const passwordMock = mockValueObject(Password, {
+ *   overrides: { compare: jest.fn().mockResolvedValue(true) },
+ *   value: 'hashed123',
+ * });
+ */
+export function mockValueObject<T, V extends ValueObject<T>>(
+  className: new (...args: any[]) => V,
+  { overrides, value }: { overrides: Partial<jest.Mocked<V>>; value?: T } = {
+    overrides: {},
+    value: undefined,
+  },
+): jest.Mocked<V> {
+  const mock: Partial<jest.Mocked<V>> = {
+    equals: jest.fn().mockReturnValue(true),
+    unpack: jest.fn().mockReturnValue(value),
+    validate: jest.fn(),
+    ...overrides,
+  };
+
+  // simulate internal structure: value stored in props.value
+  Object.defineProperty(mock, 'value', {
+    get: () => value ?? '[mock-value]',
+  });
+
+  // this cast is safe in tests because all VOs follow a common interface
+  return mock as jest.Mocked<V>;
 }

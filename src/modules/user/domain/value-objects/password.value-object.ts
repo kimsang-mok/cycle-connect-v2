@@ -5,7 +5,7 @@ import * as bcrypt from 'bcryptjs';
 const MIN_LENGTH = 6;
 
 export class Password extends ValueObject<string> {
-  private constructor(props: DomainPrimitive<string>) {
+  constructor(props: DomainPrimitive<string>) {
     super(props);
   }
 

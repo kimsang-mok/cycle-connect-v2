@@ -5,7 +5,13 @@ import { LoginUserCommand } from './login-user.command';
 import { UserNotFoundError } from '@src/modules/user/user.errors';
 import { UserEntity } from '@src/modules/user/domain/user.entity';
 import { InvalidCredentialError } from '../../auth.errors';
-import { mockClassMethods, mockInterface } from '@tests/utils/create-mock';
+import {
+  mockClassMethods,
+  mockInterface,
+  mockAggregateRoot,
+  mockValueObject,
+} from '@tests/utils/create-mock';
+import { Password } from '@src/modules/user/domain/value-objects/password.value-object';
 
 describe('LoginUserService', () => {
   let service: LoginUserService;
@@ -33,13 +39,12 @@ describe('LoginUserService', () => {
   });
 
   it('should throw InvalidCredentialError if password does not match', async () => {
-    const mockUser = {
-      getProps: () => ({
-        password: {
-          compare: jest.fn().mockResolvedValue(false),
-        },
+    const mockUser = mockAggregateRoot(UserEntity, {
+      password: mockValueObject(Password, {
+        overrides: { compare: jest.fn().mockResolvedValue(false) },
+        value: 'hashed-password',
       }),
-    } as unknown as UserEntity;
+    });
 
     userRepo.findOneByEmail.mockResolvedValue(mockUser);
 
