@@ -7,6 +7,7 @@
 
 const usersRoot = 'users';
 const authRoot = 'auth';
+const bikeRoot = 'bikes';
 
 // Api Versions
 const v1 = 'v1';
@@ -24,5 +25,12 @@ export const routesV1 = {
     verify: `${authRoot}/verify`,
     login: `${authRoot}/login`,
     refresh: `${authRoot}/refresh`,
+  },
+
+  bike: {
+    tag: 'Bike',
+    root: bikeRoot,
+    activate: `${bikeRoot}/:id/activate`,
+    deactivate: `${bikeRoot}/:id/deactivate`,
   },
 };
