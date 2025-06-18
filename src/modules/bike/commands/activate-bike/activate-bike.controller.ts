@@ -34,7 +34,6 @@ export class ActivateBikeController {
     required: true,
   })
   async activate(@Param('id') id: string, @Request() request) {
-    // console.log(request.user);
     const command = new ActivateBikeCommand({
       requesterId: request.user.id,
       bikeId: id,

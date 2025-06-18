@@ -5,10 +5,13 @@ import * as request from 'supertest';
 import * as bcrypt from 'bcryptjs';
 import { DataSource } from 'typeorm';
 import { VerificationStatus } from '@src/modules/auth/domain/auth.types';
+import { clearDatabase } from '@tests/utils/clear-database';
 
 describe('AuthModule - Login Scenarios', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+
+  const endpoint = '/v1/auth/login';
 
   const password = 'Secret123';
   let hashedPassword: string;
@@ -21,6 +24,7 @@ describe('AuthModule - Login Scenarios', () => {
   });
 
   afterAll(async () => {
+    await clearDatabase(dataSource);
     await app.close();
   });
 
@@ -34,7 +38,7 @@ describe('AuthModule - Login Scenarios', () => {
     });
 
     const res = await request(app.getHttpServer())
-      .post('/v1/auth/login')
+      .post(endpoint)
       .send({ email, password })
       .expect(200);
 
@@ -51,7 +55,7 @@ describe('AuthModule - Login Scenarios', () => {
     });
 
     await request(app.getHttpServer())
-      .post('/v1/auth/login')
+      .post(endpoint)
       .send({ email, password: 'WrongPassword' })
       .expect(401);
   });
@@ -66,14 +70,14 @@ describe('AuthModule - Login Scenarios', () => {
     });
 
     await request(app.getHttpServer())
-      .post('/v1/auth/login')
+      .post(endpoint)
       .send({ email, password })
       .expect(403);
   });
 
   it('should fail if user does not exist', async () => {
     await request(app.getHttpServer())
-      .post('/v1/auth/login')
+      .post(endpoint)
       .send({ email: 'notfound@example.com', password })
       .expect(404);
   });

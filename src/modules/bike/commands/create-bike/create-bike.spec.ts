@@ -1,56 +1,49 @@
-import { Test } from '@nestjs/testing';
 import { CreateBikeService } from './create-bike.service';
 import { CreateBikeCommand } from './create-bike.command';
-import { BIKE_REPOSITORY } from '../../bike.di-tokens';
 import { BikeRepositoryPort } from '../../database/ports/bike.repository.port';
 import { BikeTypes } from '../../domain/bike.types';
 import { Price } from '../../domain/value-objects/price.value-object';
+import { mockAggregateRoot, mockInterface } from '@tests/utils/create-mock';
+import { BikeEntity } from '../../domain/bike.entity';
+import { ArgumentInvalidException } from '@src/libs/exceptions';
 
 describe('CreateBikeService', () => {
   let service: CreateBikeService;
   let bikeRepo: jest.Mocked<BikeRepositoryPort>;
 
+  const bikeCommandProps = {
+    ownerId: 'user-123',
+    type: BikeTypes.motorbike,
+    model: 'Honda Wave',
+    enginePower: 125,
+    description: 'A fuel-efficient bike',
+    pricePerDay: new Price(12.5),
+    photoKeys: ['uploads/user-123/photo1.jpg'],
+    thumbnailKey: 'uploads/user-123/photo1.jpg',
+  };
+
   beforeEach(async () => {
-    const mockRepo: jest.Mocked<BikeRepositoryPort> = {
-      insert: jest.fn(),
-      transaction: jest.fn(),
-    } as any;
+    bikeRepo = mockInterface<BikeRepositoryPort>();
 
-    const moduleRef = await Test.createTestingModule({
-      providers: [
-        CreateBikeService,
-        {
-          provide: BIKE_REPOSITORY,
-          useValue: mockRepo,
-        },
-      ],
-    }).compile();
+    service = new CreateBikeService(bikeRepo);
+  });
 
-    service = moduleRef.get(CreateBikeService);
-    bikeRepo = moduleRef.get(BIKE_REPOSITORY);
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should create and insert a bike, then return its id', async () => {
-    const command = new CreateBikeCommand({
-      ownerId: 'user-123',
-      type: BikeTypes.motorbike,
-      model: 'Honda Wave',
-      enginePower: 125,
-      description: 'A fuel-efficient bike',
-      pricePerDay: new Price(12.5),
-      photoKeys: ['uploads/user-123/photo1.jpg'],
-      thumbnailKey: 'uploads/user-123/photo1.jpg',
-    });
+    const command = new CreateBikeCommand(bikeCommandProps);
 
-    bikeRepo.transaction.mockImplementation(async (cb) => {
-      await cb(); // execute insert inside
-      return 'mock-bike-id';
-    });
+    const bikeId = 'mock-bike-id';
+
+    const mockBike = mockAggregateRoot(BikeEntity, { ...command, id: bikeId });
+
+    jest.spyOn(BikeEntity, 'create').mockReturnValue(mockBike);
 
     const result = await service.execute(command);
 
     expect(typeof result).toBe('string');
-    expect(bikeRepo.transaction).toHaveBeenCalled();
     expect(bikeRepo.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         getProps: expect.any(Function),
@@ -59,6 +52,19 @@ describe('CreateBikeService', () => {
         },
       }),
     );
-    expect(result).toEqual('mock-bike-id');
+    expect(result).toEqual(bikeId);
+  });
+
+  it('should throw an error if thumbnailKey is not in photoKeys', async () => {
+    const command = new CreateBikeCommand({
+      ...bikeCommandProps,
+      thumbnailKey: 'uploads/user-123/photo2.jpg', // not in photoKeys
+    });
+
+    await expect(service.execute(command)).rejects.toThrow(
+      ArgumentInvalidException,
+    );
+
+    expect(bikeRepo.insert).not.toHaveBeenCalled();
   });
 });
