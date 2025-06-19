@@ -23,6 +23,7 @@ import authConfig from './modules/auth/config/auth.config';
 import mailerConfig from './libs/mailer/config/mailer.config';
 import { NotificationModule } from './modules/notification/notification.module';
 import { getEnvFilePath } from './libs/utils/get-env-path';
+import { BikeModule } from './modules/bike/bike.module';
 
 const interceptors: Provider[] = [
   {
@@ -66,6 +67,7 @@ const filters: Provider[] = [
     UserModule,
     AuthModule,
     NotificationModule,
+    BikeModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],

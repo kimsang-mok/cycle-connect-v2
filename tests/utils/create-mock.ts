@@ -1,4 +1,10 @@
-import { ValueObject } from '@src/libs/ddd';
+import {
+  AggregateId,
+  AggregateRoot,
+  BaseEntityProps,
+  CreateEntityProps,
+  ValueObject,
+} from '@src/libs/ddd';
 
 /**
  * create a jest mock for all methods and accessors of a given class.
@@ -94,32 +100,106 @@ export function asMock<T extends (...args: any[]) => any>(
  *   role: UserRoles.admin,
  * });
  */
-export function mockAggregateRoot<T extends new (...args: any[]) => any>(
-  ClassConstructor: T,
-  propsOverride: Partial<ReturnType<InstanceType<T>['getProps']>> = {},
-  methodOverrides: Partial<jest.Mocked<InstanceType<T>>> = {},
-): jest.Mocked<InstanceType<T>> {
-  const mock = {
-    validate: jest.fn(),
-    getProps: jest.fn().mockReturnValue({
-      id: 'mock-id',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      ...propsOverride,
-    }),
-    toObject: jest.fn().mockReturnValue({
-      id: 'mock-id',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      ...propsOverride,
-    }),
-    addEvent: jest.fn(),
-    clearEvents: jest.fn(),
-    publishEvents: jest.fn(),
-    ...methodOverrides,
+export function mockAggregateRoot<P, T extends AggregateRoot<P>>(
+  ClassConstructor: new (args: CreateEntityProps<P>) => T,
+  propsOverride: Partial<P & BaseEntityProps> = {},
+  methodOverrides: Partial<jest.Mocked<T>> = {},
+): jest.Mocked<T> {
+  const now = new Date();
+
+  const baseProps: BaseEntityProps = {
+    id: 'mock-id' as AggregateId,
+    createdAt: now,
+    updatedAt: now,
   };
 
-  return mock as jest.Mocked<InstanceType<T>>;
+  const allProps = {
+    ...baseProps,
+    ...propsOverride,
+  } as P & BaseEntityProps;
+
+  const instance = Object.create(ClassConstructor.prototype);
+
+  // inject private/internal fields
+  Object.defineProperties(instance, {
+    _id: {
+      value: allProps.id,
+      writable: true,
+      configurable: true,
+    },
+    _createdAt: {
+      value: allProps.createdAt,
+      writable: true,
+      configurable: true,
+    },
+    _updatedAt: {
+      value: allProps.updatedAt,
+      writable: true,
+      configurable: true,
+    },
+    props: {
+      value: allProps,
+      writable: true,
+      configurable: true,
+    },
+    domainEvents: {
+      value: [],
+      writable: true,
+      configurable: true,
+    },
+  });
+
+  // restore getters like `entity.id`
+  Object.defineProperties(instance, {
+    id: {
+      get: () => allProps.id,
+      configurable: true,
+    },
+    createdAt: {
+      get: () => allProps.createdAt,
+      configurable: true,
+    },
+    updatedAt: {
+      get: () => allProps.updatedAt,
+      configurable: true,
+    },
+  });
+
+  // manually cast core method mocks with `asMock`
+  instance.getProps = asMock(() => Object.freeze({ ...allProps }));
+  instance.toObject = asMock(() => ({ ...allProps }));
+  instance.clearEvents = asMock(() => {});
+  instance.validate = asMock(() => {});
+
+  // mock methods
+  let proto = ClassConstructor.prototype;
+  while (proto && proto !== Object.prototype) {
+    for (const key of Object.getOwnPropertyNames(proto)) {
+      if (key === 'constructor') continue;
+
+      if (Object.keys(instance).includes(key)) continue;
+
+      const desc = Object.getOwnPropertyDescriptor(proto, key);
+      if (!desc) continue;
+
+      if (typeof desc.value === 'function') {
+        instance[key] = jest.fn();
+      } else if (desc.get || desc.set) {
+        if (Object.prototype.hasOwnProperty.call(instance, key)) continue;
+
+        Object.defineProperty(instance, key, {
+          get: desc.get ? jest.fn() : undefined,
+          set: desc.set ? jest.fn() : undefined,
+          configurable: true,
+        });
+      }
+    }
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  Object.assign(instance, methodOverrides);
+
+  return instance as jest.Mocked<T>;
 }
 
 /**

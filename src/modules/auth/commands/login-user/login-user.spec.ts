@@ -10,7 +10,7 @@ import {
   mockInterface,
   mockAggregateRoot,
   mockValueObject,
-} from '@tests/utils/create-mock';
+} from '@tests/utils';
 import { Password } from '@src/modules/user/domain/value-objects/password.value-object';
 
 describe('LoginUserService', () => {
