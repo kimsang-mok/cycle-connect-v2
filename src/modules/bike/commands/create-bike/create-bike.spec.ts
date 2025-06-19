@@ -3,7 +3,7 @@ import { CreateBikeCommand } from './create-bike.command';
 import { BikeRepositoryPort } from '../../database/ports/bike.repository.port';
 import { BikeTypes } from '../../domain/bike.types';
 import { Price } from '../../domain/value-objects/price.value-object';
-import { mockAggregateRoot, mockInterface } from '@tests/utils/create-mock';
+import { mockAggregateRoot, mockInterface } from '@tests/utils';
 import { BikeEntity } from '../../domain/bike.entity';
 import { ArgumentInvalidException } from '@src/libs/exceptions';
 

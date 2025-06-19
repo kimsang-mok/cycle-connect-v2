@@ -1,11 +1,10 @@
 import { INestApplication } from '@nestjs/common';
-import { createTestUser } from '@tests/fixtures/test-user.fixture';
-import { createTestModule } from '@tests/utils/setup-test-app';
+import { createTestUser } from '@tests/fixtures';
+import { createTestModule, clearDatabase } from '@tests/utils';
 import * as request from 'supertest';
 import * as bcrypt from 'bcryptjs';
 import { DataSource } from 'typeorm';
 import { VerificationStatus } from '@src/modules/auth/domain/auth.types';
-import { clearDatabase } from '@tests/utils/clear-database';
 
 describe('AuthModule - Login Scenarios', () => {
   let app: INestApplication;

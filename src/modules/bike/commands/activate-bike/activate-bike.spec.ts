@@ -1,4 +1,4 @@
-import { mockAggregateRoot, mockInterface } from '@tests/utils/create-mock';
+import { mockAggregateRoot, mockInterface } from '@tests/utils';
 import { BikeRepositoryPort } from '../../database/ports/bike.repository.port';
 import { ActivateBikeService } from './activate-bike.service';
 import { BikeEntity } from '../../domain/bike.entity';

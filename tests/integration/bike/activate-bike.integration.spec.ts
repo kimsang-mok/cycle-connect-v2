@@ -1,12 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { UserRoles } from '@src/modules/user/domain/user.types';
-import { createTestBike } from '@tests/fixtures/test-bike.fixture';
-import { createTestUser } from '@tests/fixtures/test-user.fixture';
+import { createTestUser, createTestBike } from '@tests/fixtures';
 import { MockJwtAuthGuard } from '@tests/mocks/mock-auth.guard';
-import { createTestModule } from '@tests/utils/setup-test-app';
+import { createTestModule, clearDatabase } from '@tests/utils';
 import { DataSource } from 'typeorm';
 import * as request from 'supertest';
-import { clearDatabase } from '@tests/utils/clear-database';
 
 describe('BikeModule - Activate Bike Scenarios', () => {
   let app: INestApplication;

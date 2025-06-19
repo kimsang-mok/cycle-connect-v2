@@ -8,7 +8,7 @@ import { DataSource } from 'typeorm';
  */
 export async function clearDatabase(dataSource: DataSource): Promise<void> {
   if (!dataSource.isInitialized) {
-    await dataSource.initialize();
+    throw new Error('DataSource is not initialized');
   }
 
   const queryRunner = dataSource.createQueryRunner();
