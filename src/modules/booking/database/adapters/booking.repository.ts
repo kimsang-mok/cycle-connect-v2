@@ -4,9 +4,11 @@ import { BookingOrmEntity } from '../booking.orm-entity';
 import { BookingRepositoryPort } from '../ports/booking.repository.port';
 import { BookingMapper } from '../../booking.mapper';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BookingStatus } from '../../domain/booking.types';
+import { MoreThanOrEqual } from 'typeorm';
 
+@Injectable()
 export class BookingRepository
   extends SqlRepositoryBase<BookingEntity, BookingOrmEntity>
   implements BookingRepositoryPort
@@ -17,9 +19,16 @@ export class BookingRepository
     super(mapper, eventEmitter, new Logger(BookingRepository.name));
   }
 
-  async findConfirmedByBikeId(bikeId: string): Promise<BookingEntity[]> {
+  async findActiveConfirmedByBikeId(
+    bikeId: string,
+    fromDate: Date,
+  ): Promise<BookingEntity[]> {
     const entities = await this.repository.find({
-      where: { bikeId, status: BookingStatus.confirmed },
+      where: {
+        bikeId,
+        status: BookingStatus.confirmed,
+        endDate: MoreThanOrEqual(fromDate),
+      },
     });
 
     return entities.map((entity) => this.mapper.toDomain(entity));

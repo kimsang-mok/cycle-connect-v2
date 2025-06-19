@@ -22,18 +22,16 @@ export class RentalPeriod extends ValueObject<RentalPeriodProps> {
   }
 
   overlaps(other: RentalPeriod): boolean {
-    const thisStart = this.toUTCDateOnly(this.start);
-    const thisEnd = this.toUTCDateOnly(this.end);
-    const otherStart = this.toUTCDateOnly(other.start);
-    const otherEnd = this.toUTCDateOnly(other.end);
+    const thisStart = this.stripTime(this.start);
+    const thisEnd = this.stripTime(this.end);
+    const otherStart = this.stripTime(other.start);
+    const otherEnd = this.stripTime(other.end);
 
     return thisStart <= otherEnd && thisEnd >= otherStart;
   }
 
-  private toUTCDateOnly(date: Date): Date {
-    return new Date(
-      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
-    );
+  private stripTime(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
   protected validate(props: RentalPeriodProps): void {

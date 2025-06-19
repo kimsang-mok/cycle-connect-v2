@@ -4,7 +4,9 @@ import { BookingOrmEntity } from './database/booking.orm-entity';
 import { BookingResponseDto } from './dtos/booking.response.dto';
 import { RentalPeriod } from '../bike/domain/value-objects/rental-period.value-object';
 import { Price } from '../bike/domain/value-objects/price.value-object';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BookingMapper
   implements Mapper<BookingEntity, BookingOrmEntity, BookingResponseDto>
 {
@@ -32,8 +34,8 @@ export class BookingMapper
         bikeId: record.bikeId,
         customerName: record.customerName,
         period: new RentalPeriod({
-          start: record.startDate,
-          end: record.endDate,
+          start: new Date(record.startDate),
+          end: new Date(record.endDate),
         }),
         status: record.status,
         totalPrice: new Price(record.totalPrice),
