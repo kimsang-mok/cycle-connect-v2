@@ -24,6 +24,7 @@ import mailerConfig from './libs/mailer/config/mailer.config';
 import { NotificationModule } from './modules/notification/notification.module';
 import { getEnvFilePath } from './libs/utils/get-env-path';
 import { BikeModule } from './modules/bike/bike.module';
+import { BookingModule } from './modules/booking/booking.module';
 
 const interceptors: Provider[] = [
   {
@@ -68,6 +69,7 @@ const filters: Provider[] = [
     AuthModule,
     NotificationModule,
     BikeModule,
+    BookingModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],

@@ -1,6 +1,12 @@
 import { HttpStatus } from '@nestjs/common';
 import { defineDomainError } from '@src/libs/exceptions/define-domain-error';
 
+export const BikeNotFoundError = defineDomainError({
+  message: 'Bike not found',
+  code: 'BIKE.NOT_FOUND',
+  status: HttpStatus.NOT_FOUND,
+});
+
 export const BikeNotAvailableError = defineDomainError({
   message: 'Bike is not available at this moment',
   code: 'BIKE.NOT_AVAILABLE',

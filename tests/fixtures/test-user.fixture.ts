@@ -15,7 +15,7 @@ export async function createTestUser(
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
 
-  const userId = overrides?.id ?? crypto.randomUUID();
+  const id = overrides?.id ?? crypto.randomUUID();
   const email = overrides?.email ?? 'test@example.com';
   const password = overrides?.password ?? '$2a$10$hashed'; // pre-hashed bcrypt
   const role = overrides?.role ?? UserRoles.customer;
@@ -25,16 +25,16 @@ export async function createTestUser(
   await queryRunner.query(
     `INSERT INTO users(id, email, password, role, created_at, updated_at)
      VALUES ($1, $2, $3, $4, now(), now())`,
-    [userId, email, password, role],
+    [id, email, password, role],
   );
 
   await queryRunner.query(
     `INSERT INTO user_verifications(id, user_id, status, created_at)
      VALUES (gen_random_uuid(), $1, $2, now())`,
-    [userId, verificationStatus],
+    [id, verificationStatus],
   );
 
   await queryRunner.release();
 
-  return { userId, email, password };
+  return { id, email, password };
 }

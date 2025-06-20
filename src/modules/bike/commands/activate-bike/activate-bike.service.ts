@@ -4,8 +4,7 @@ import { AggregateId } from '@src/libs/ddd';
 import { Inject } from '@nestjs/common';
 import { BIKE_REPOSITORY } from '../../bike.di-tokens';
 import { BikeRepositoryPort } from '../../database/ports/bike.repository.port';
-import { NotFoundException } from '@src/libs/exceptions';
-import { BikeOwnershipError } from '../../bike.errors';
+import { BikeNotFoundError, BikeOwnershipError } from '../../bike.errors';
 
 @CommandHandler(ActivateBikeCommand)
 export class ActivateBikeService
@@ -20,7 +19,7 @@ export class ActivateBikeService
     const bike = await this.bikeRepo.findOneById(command.bikeId);
 
     if (!bike) {
-      throw new NotFoundException();
+      throw new BikeNotFoundError();
     }
 
     if (bike.getProps().ownerId !== command.requesterId) {

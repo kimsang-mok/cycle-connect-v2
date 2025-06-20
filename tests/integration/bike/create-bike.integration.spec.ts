@@ -7,6 +7,7 @@ import { CreateBikeRequestDto } from '@src/modules/bike/commands/create-bike/cre
 import { UserRoles } from '@src/modules/user/domain/user.types';
 import { createTestUser } from '@tests/fixtures';
 import { MockJwtAuthGuard } from '@tests/mocks/mock-auth.guard';
+import { ARGUMENT_INVALID } from '@src/libs/exceptions';
 
 describe('BikeModule - Create Bike Scenarios', () => {
   let app: INestApplication;
@@ -34,7 +35,7 @@ describe('BikeModule - Create Bike Scenarios', () => {
       role: UserRoles.renter,
     });
 
-    MockJwtAuthGuard.user.id = renter.userId;
+    MockJwtAuthGuard.user.id = renter.id;
     MockJwtAuthGuard.user.role = UserRoles.renter;
   });
 
@@ -61,6 +62,6 @@ describe('BikeModule - Create Bike Scenarios', () => {
       .send(createBikeDto)
       .expect(400);
 
-    expect(res.body.error).toBe('GENERIC.ARGUMENT_INVALID');
+    expect(res.body.error).toBe(ARGUMENT_INVALID);
   });
 });
