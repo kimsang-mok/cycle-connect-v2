@@ -19,7 +19,7 @@ export async function createTestBike(
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
 
-  const bikeId = overrides?.id ?? crypto.randomUUID();
+  const id = overrides?.id ?? crypto.randomUUID();
   const ownerId = overrides?.ownerId ?? crypto.randomUUID(); // Replace with a real user ID if needed
   const type = overrides?.type ?? BikeTypes.motorbike;
   const model = overrides?.model ?? 'Yamaha X1';
@@ -43,7 +43,7 @@ export async function createTestBike(
       now(), now()
     )`,
     [
-      bikeId,
+      id,
       ownerId,
       type,
       model,
@@ -59,7 +59,7 @@ export async function createTestBike(
   await queryRunner.release();
 
   return {
-    bikeId,
+    id,
     ownerId,
     type,
     model,

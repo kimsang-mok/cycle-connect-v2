@@ -1,7 +1,7 @@
 import { Logger, Module, Provider } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CreateBookingController } from './command/create-booking/create-booking.controller';
-import { CreateBookingService } from './command/create-booking/create-booking.service';
+import { CreateBookingController } from './commands/create-booking/create-booking.controller';
+import { CreateBookingService } from './commands/create-booking/create-booking.service';
 import { BookingMapper } from './booking.mapper';
 import { BOOKING_REPOSITORY } from './booking.di-tokens';
 import { BookingRepository } from './database/adapters/booking.repository';

@@ -5,6 +5,10 @@ import { MockJwtAuthGuard } from '@tests/mocks/mock-auth.guard';
 import { createTestModule, clearDatabase } from '@tests/utils';
 import { DataSource } from 'typeorm';
 import * as request from 'supertest';
+import {
+  BikeNotFoundError,
+  BikeOwnershipError,
+} from '@src/modules/bike/bike.errors';
 
 describe('BikeModule - Activate Bike Scenarios', () => {
   let app: INestApplication;
@@ -25,8 +29,8 @@ describe('BikeModule - Activate Bike Scenarios', () => {
       role: UserRoles.renter,
     });
 
-    ownerId = renter.userId;
-    MockJwtAuthGuard.user.id = renter.userId;
+    ownerId = renter.id;
+    MockJwtAuthGuard.user.id = renter.id;
     MockJwtAuthGuard.user.role = UserRoles.renter;
 
     const bike = await createTestBike(dataSource, {
@@ -34,7 +38,7 @@ describe('BikeModule - Activate Bike Scenarios', () => {
       isActive: false,
     });
 
-    bikeId = bike.bikeId;
+    bikeId = bike.id;
   });
 
   afterAll(async () => {
@@ -57,7 +61,7 @@ describe('BikeModule - Activate Bike Scenarios', () => {
       .patch(endpoint(fakeBikeId))
       .expect(404);
 
-    expect(res.body.message).toBeDefined();
+    expect(res.body.message).toBe(BikeNotFoundError.message);
   });
 
   it('should fail if the user does not own the bike', async () => {
@@ -66,12 +70,12 @@ describe('BikeModule - Activate Bike Scenarios', () => {
       role: UserRoles.renter,
     });
 
-    MockJwtAuthGuard.user.id = anotherUser.userId;
+    MockJwtAuthGuard.user.id = anotherUser.id;
 
     const res = await request(app.getHttpServer())
       .patch(endpoint(bikeId))
       .expect(403);
 
-    expect(res.body.error).toBe('BIKE.FORBIDDEN_OWNERSHIP');
+    expect(res.body.message).toBe(BikeOwnershipError.message);
   });
 });

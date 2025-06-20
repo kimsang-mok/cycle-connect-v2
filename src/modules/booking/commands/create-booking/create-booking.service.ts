@@ -9,6 +9,7 @@ import { BIKE_REPOSITORY } from '@src/modules/bike/bike.di-tokens';
 import { BikeRepositoryPort } from '@src/modules/bike/database/ports/bike.repository.port';
 import { BookingAvailabilityService } from '../../domain/services/booking-availability.service';
 import {
+  BikeInactiveError,
   BikeNotAvailableError,
   BikeNotFoundError,
 } from '@src/modules/bike/bike.errors';
@@ -26,7 +27,6 @@ export class CreateBookingService
     @Inject(BIKE_REPOSITORY)
     private readonly bikeRepo: BikeRepositoryPort,
     private readonly availabilityService: BookingAvailabilityService,
-
     private readonly pricingService: BookingPricingService,
   ) {}
 
@@ -44,7 +44,7 @@ export class CreateBookingService
     }
 
     if (!bike.getProps().isActive) {
-      throw new BikeNotAvailableError();
+      throw new BikeInactiveError();
     }
 
     const isBikeAvailable = await this.availabilityService.isBikeAvailable(
