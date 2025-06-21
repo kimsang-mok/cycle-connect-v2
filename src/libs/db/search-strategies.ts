@@ -26,7 +26,14 @@ export class ILikeSearchStrategy<T extends ObjectLiteral>
   }
 }
 
-export class FullTextSearchStrategy<T extends ObjectLiteral>
+/**
+ * dynamic full-text search strategy
+ *
+ * this computes a `tsvector` on-the-fly from the specified fields
+ * flexible — no need for `search_vector` column or trigger
+ * slower for large datasets — can't use GIN index
+ */
+export class DynamicFullTextSearchStrategy<T extends ObjectLiteral>
   implements SearchStrategy<T>
 {
   constructor(
@@ -36,12 +43,47 @@ export class FullTextSearchStrategy<T extends ObjectLiteral>
 
   apply(qb: SelectQueryBuilder<T>, term: string): void {
     const alias = qb.alias;
+
+    // build a tsvector expression by combining all target fields
     const vectorExpr = this.fields
       .map((f) => `COALESCE(${alias}.${String(f)}, '')`)
       .join(" || ' ' || ");
+
     qb.andWhere(
       `to_tsvector(:lang, ${vectorExpr}) @@ plainto_tsquery(:lang, :query)`,
-      { lang: this.language, query: term },
+      {
+        lang: this.language,
+        query: term,
+      },
+    );
+  }
+}
+
+/**
+ * pre-computed full-text search strategy
+ *
+ * this uses a dedicated `tsvector` column (e.g. `search_vector`)
+ * fast — uses GIN index for performance
+ * requires DB migration and trigger to maintain `search_vector`
+ */
+export class PercomputedFullTextSearchStrategy<T extends ObjectLiteral>
+  implements SearchStrategy<T>
+{
+  constructor(
+    private columnName: keyof T = 'search_vector',
+    private language: string = 'english',
+  ) {}
+
+  apply(qb: SelectQueryBuilder<T>, term: string): void {
+    const alias = qb.alias;
+
+    // use precomputed tsvector column (must be indexed via GIN)
+    qb.andWhere(
+      `${alias}.${String(this.columnName)} @@ plainto_tsquery(:lang, :query)`,
+      {
+        lang: this.language,
+        query: term,
+      },
     );
   }
 }

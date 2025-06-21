@@ -2,7 +2,12 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ListMyBikesQuery } from './list-my-bikes.query';
 import { BikeOrmEntity } from '../../database/bike.orm-entity';
 import { DataSource } from 'typeorm';
-import { ILikeSearchStrategy, QueryUtil } from '@src/libs/db';
+import {
+  FilterOperator,
+  PercomputedFullTextSearchStrategy,
+  QueryUtil,
+  SortDirection,
+} from '@src/libs/db';
 import { Paginated } from '@src/libs/ddd';
 
 @QueryHandler(ListMyBikesQuery)
@@ -18,36 +23,33 @@ export class ListMyBikesQueryHandler
     );
 
     const result = await queryUtil
-      .search(
-        new ILikeSearchStrategy(['model', 'description']),
-        query.searchTerm,
-      )
+      .search(new PercomputedFullTextSearchStrategy(), query.searchTerm)
       .filter({
         field: 'ownerId',
-        operator: '=',
+        operator: FilterOperator.equal,
         value: query.ownerId,
       })
       .filter({
         field: 'type',
-        operator: '=',
+        operator: FilterOperator.equal,
         value: query.type,
       })
       .filter({
         field: 'enginePower',
-        operator: '=',
+        operator: FilterOperator.equal,
         value: query.enginePower,
       })
       .filter({
         field: 'pricePerDay',
-        operator: '>=',
+        operator: FilterOperator.greaterThanEqual,
         value: query.minPrice,
       })
       .filter({
         field: 'pricePerDay',
-        operator: '<=',
+        operator: FilterOperator.lessThanEqual,
         value: query.maxPrice,
       })
-      .sort([{ field: 'createdAt', direction: 'DESC' }])
+      .sort([{ field: 'createdAt', direction: SortDirection.desc }])
       .paginate({ page: query.page, limit: query.limit })
       .execute();
 

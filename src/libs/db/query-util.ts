@@ -1,6 +1,11 @@
 import { DataSource, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { SearchStrategy } from './search-strategies';
-import { FilterCondition, QueryOptions, SortOption } from './query.types';
+import {
+  FilterCondition,
+  FilterOperator,
+  QueryOptions,
+  SortOption,
+} from './query.types';
 import { Paginated } from '../ddd';
 
 export class QueryUtil<T extends ObjectLiteral> {
@@ -30,26 +35,26 @@ export class QueryUtil<T extends ObjectLiteral> {
       .substring(2, 6)}`;
 
     switch (operator) {
-      case '=':
-      case '>':
-      case '<':
-      case '>=':
-      case '<=':
+      case FilterOperator.equal:
+      case FilterOperator.greaterThan:
+      case FilterOperator.lessThan:
+      case FilterOperator.greaterThanEqual:
+      case FilterOperator.lessThanEqual:
         this.qb.andWhere(`${alias}.${String(field)} ${operator} :${paramKey}`, {
           [paramKey]: value,
         });
         break;
-      case '!=':
+      case FilterOperator.notEqual:
         this.qb.andWhere(`${alias}.${String(field)} <> :${paramKey}`, {
           [paramKey]: value,
         });
         break;
-      case 'IN':
+      case FilterOperator.in:
         this.qb.andWhere(`${alias}.${String(field)} IN (:...${paramKey})`, {
           [paramKey]: value,
         });
         break;
-      case 'BETWEEN':
+      case FilterOperator.between:
         this.qb.andWhere(
           `${alias}.${String(field)} BETWEEN :${paramKey}_start AND :${paramKey}_end`,
           {
@@ -58,8 +63,8 @@ export class QueryUtil<T extends ObjectLiteral> {
           },
         );
         break;
-      case 'LIKE':
-      case 'ILIKE':
+      case FilterOperator.like:
+      case FilterOperator.iLike:
         this.qb.andWhere(`${alias}.${String(field)} ${operator} :${paramKey}`, {
           [paramKey]: value,
         });
@@ -79,6 +84,11 @@ export class QueryUtil<T extends ObjectLiteral> {
         this.qb.addOrderBy(fieldName, direction);
       }
     });
+    return this;
+  }
+
+  custom(fn: (qb: SelectQueryBuilder<T>) => void): this {
+    fn(this.qb);
     return this;
   }
 
