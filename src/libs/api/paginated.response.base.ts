@@ -6,7 +6,13 @@ export abstract class PaginatedResponseDto<T> extends Paginated<T> {
     example: 5312,
     description: 'Total number of items',
   })
-  readonly count: number;
+  readonly total: number;
+
+  @ApiProperty({
+    example: 10,
+    description: 'Total number of items',
+  })
+  readonly totalPages: number;
 
   @ApiProperty({
     example: 10,

@@ -31,12 +31,16 @@ export const routesV1 = {
   bike: {
     tag: 'Bike',
     root: bikeRoot,
+    get: `${bikeRoot}/:id`,
     activate: `${bikeRoot}/:id/activate`,
     deactivate: `${bikeRoot}/:id/deactivate`,
+    myBikes: `${bikeRoot}/me`,
   },
 
   booking: {
     tag: 'Booking',
     root: bookingRoot,
+    myBooking: `${bookingRoot}/me`,
+    renterBookings: `${bookingRoot}/renter`,
   },
 };
