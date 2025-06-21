@@ -7,10 +7,24 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CreateBikeService } from './commands/create-bike/create-bike.service';
 import { ActivateBikeService } from './commands/activate-bike/activate-bike.service';
 import { ActivateBikeController } from './commands/activate-bike/activate-bike.controller';
+import { ListMyBikesController } from './queries/list-my-bikes/list-my-bikes.controller';
+import { ListMyBikesQueryHandler } from './queries/list-my-bikes/list-my-bikes.query-handler';
+import { GetBikeByIdController } from './queries/get-bike-by-id/get-bike-by-id.controller';
+import { GetBikeByIdQueryHandler } from './queries/get-bike-by-id/get-bike-by-id.query-handler';
 
-const controllers = [CreateBikeController, ActivateBikeController];
+const controllers = [
+  CreateBikeController,
+  ActivateBikeController,
+  ListMyBikesController,
+  GetBikeByIdController,
+];
 
 const commandHandlers: Provider[] = [CreateBikeService, ActivateBikeService];
+
+const queryHandlers: Provider[] = [
+  ListMyBikesQueryHandler,
+  GetBikeByIdQueryHandler,
+];
 
 const repositories: Provider[] = [
   {
@@ -24,7 +38,13 @@ const mappers: Provider[] = [BikeMapper];
 @Module({
   imports: [CqrsModule],
   controllers: [...controllers],
-  providers: [Logger, ...repositories, ...commandHandlers, ...mappers],
+  providers: [
+    Logger,
+    ...repositories,
+    ...commandHandlers,
+    ...queryHandlers,
+    ...mappers,
+  ],
   exports: [BIKE_REPOSITORY],
 })
 export class BikeModule {}

@@ -46,7 +46,4 @@ export class BikeResponseDto extends ResponseBase {
     description: 'Full S3 URLs to bike images',
   })
   photoUrls: string[];
-
-  @ApiProperty({ example: 'Test Honda Wave' })
-  test: string;
 }
