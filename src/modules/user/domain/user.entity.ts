@@ -22,8 +22,8 @@ export class UserEntity extends AggregateRoot<UserProps> {
     user.addEvent(
       new UserCreatedDomainEvent({
         aggregateId: id,
-        email: props.email,
-        password: props.password,
+        email: props.email.unpack(),
+        password: props.password.unpack(),
         role: props.role,
       }),
     );

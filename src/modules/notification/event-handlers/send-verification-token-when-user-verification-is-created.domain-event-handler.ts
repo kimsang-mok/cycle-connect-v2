@@ -17,7 +17,7 @@ export class SendVerificationTokenWhenUserVerificationIsCreatedDomainEventHandle
     url.searchParams.set('token', event.token);
 
     await this.mailerService.sendMail({
-      toEmail: event.email.unpack(),
+      toEmail: event.email,
       toName: 'Mocked User',
       mailType: MailType.VERIFY_EMAIL,
       options: { url },
