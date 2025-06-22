@@ -6,20 +6,22 @@
 */
 
 export class Paginated<T> {
-  readonly count: number;
-  readonly limit: number;
   readonly page: number;
+  readonly limit: number;
+  readonly total: number;
+  readonly totalPages: number;
   readonly data: readonly T[];
 
   constructor(props: Paginated<T>) {
-    this.count = props.count;
-    this.limit = props.limit;
     this.page = props.page;
+    this.limit = props.limit;
+    this.total = props.total;
+    this.totalPages = props.totalPages;
     this.data = props.data;
   }
 }
 
-export type OrderBy = { field: string | true; param: 'asc' | 'desc' };
+export type OrderBy = { field: string | true; param: 'ASC' | 'DESC' };
 
 export type PaginatedQueryParams = {
   limit: number;

@@ -30,6 +30,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     this.logger.debug(`[${correlationId}] Unexpected exception: ${message}`);
 
+    if (exception instanceof Error && !(exception instanceof HttpException)) {
+      this.logger.debug(
+        `[${correlationId}] Stack traces: ${(exception as Error).stack}`,
+      );
+    }
+
     const errorResponse = new ApiErrorResponse({
       statusCode: status,
       message,

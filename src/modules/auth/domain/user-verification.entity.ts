@@ -28,7 +28,7 @@ export class UserVerificationEntity extends AggregateRoot<UserVerificationProps>
     verification.addEvent(
       new UserVerificationCreatedDomainEvent({
         aggregateId: id,
-        email: create.email,
+        email: create.email.unpack(),
         token: create.token,
       }),
     );

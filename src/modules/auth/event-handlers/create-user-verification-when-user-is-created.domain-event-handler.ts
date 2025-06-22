@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserVerificationRepositoryPort } from '../database/ports/user-verification.repository.port';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from '@src/configs/config.type';
+import { Email } from '@src/modules/user/domain/value-objects/email.value-object';
 
 export class CreateUserVerificationWhenUserIsCreatedDomainEventHandler {
   private readonly logger = new Logger(
@@ -36,11 +37,9 @@ export class CreateUserVerificationWhenUserIsCreatedDomainEventHandler {
 
     const verification = UserVerificationEntity.create({
       userId: event.aggregateId,
-      email: event.email,
+      email: new Email(event.email),
       token,
     });
-
-    this.logger.log('Token: ', token);
 
     await this.userVerificationRepo.insert(verification);
   }

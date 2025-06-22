@@ -1,6 +1,5 @@
 import { DomainEvent, DomainEventProps } from '@src/libs/ddd';
 import { BookingStatus } from '../booking.types';
-import { Price } from '@src/modules/bike/domain/value-objects/price.value-object';
 
 export class BookingCreatedDomainEvent extends DomainEvent {
   readonly bikeId: string;
@@ -13,10 +12,14 @@ export class BookingCreatedDomainEvent extends DomainEvent {
 
   readonly status: BookingStatus;
 
-  readonly totalPrice: Price;
+  readonly totalPrice: number;
 
   constructor(props: DomainEventProps<BookingCreatedDomainEvent>) {
     super(props);
     this.customerName = props.customerName;
+    this.start = props.start;
+    this.end = props.end;
+    this.status = props.status;
+    this.totalPrice = props.totalPrice;
   }
 }
