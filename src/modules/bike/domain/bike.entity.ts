@@ -33,7 +33,7 @@ export class BikeEntity extends AggregateRoot<BikeProps> {
     return this.props.type;
   }
 
-  updateDetails({
+  updateDatails({
     description,
     pricePerDay,
     enginePower,

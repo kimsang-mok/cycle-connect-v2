@@ -107,6 +107,7 @@ export class QueryUtil<T extends ObjectLiteral> {
   }
 
   async execute(): Promise<Paginated<T>> {
+    // use built query to get data from database
     const [data, total] = await this.qb.getManyAndCount();
     const limit = this.qb.expressionMap.take ?? 0;
     const offset = this.qb.expressionMap.skip ?? 0;

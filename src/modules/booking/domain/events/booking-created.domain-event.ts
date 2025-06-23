@@ -16,6 +16,7 @@ export class BookingCreatedDomainEvent extends DomainEvent {
 
   constructor(props: DomainEventProps<BookingCreatedDomainEvent>) {
     super(props);
+    this.bikeId = props.bikeId;
     this.customerName = props.customerName;
     this.start = props.start;
     this.end = props.end;

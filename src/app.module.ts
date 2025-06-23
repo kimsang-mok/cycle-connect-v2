@@ -25,6 +25,8 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { getEnvFilePath } from './libs/utils/get-env-path';
 import { BikeModule } from './modules/bike/bike.module';
 import { BookingModule } from './modules/booking/booking.module';
+import paymentGatewayConfig from './libs/payment-gateway/config/payment-gateway.config';
+import { PaymentModule } from './modules/payment/payment.module';
 
 const interceptors: Provider[] = [
   {
@@ -52,7 +54,13 @@ const filters: Provider[] = [
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, authConfig, mailerConfig],
+      load: [
+        appConfig,
+        databaseConfig,
+        authConfig,
+        mailerConfig,
+        paymentGatewayConfig,
+      ],
       envFilePath: getEnvFilePath(),
     }),
     EventEmitterModule.forRoot(),
@@ -70,6 +78,7 @@ const filters: Provider[] = [
     NotificationModule,
     BikeModule,
     BookingModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],

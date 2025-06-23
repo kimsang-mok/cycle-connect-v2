@@ -9,6 +9,7 @@ const usersRoot = 'users';
 const authRoot = 'auth';
 const bikeRoot = 'bikes';
 const bookingRoot = 'bookings';
+const paymentRoot = 'payments';
 
 // Api Versions
 const v1 = 'v1';
@@ -42,5 +43,11 @@ export const routesV1 = {
     root: bookingRoot,
     myBooking: `${bookingRoot}/me`,
     renterBookings: `${bookingRoot}/renter`,
+  },
+
+  payment: {
+    tag: 'Payment',
+    root: paymentRoot,
+    authorize: `${paymentRoot}/authorize`,
   },
 };

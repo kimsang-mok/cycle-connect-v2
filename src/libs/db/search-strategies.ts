@@ -66,7 +66,7 @@ export class DynamicFullTextSearchStrategy<T extends ObjectLiteral>
  * fast — uses GIN index for performance
  * requires DB migration and trigger to maintain `search_vector`
  */
-export class PercomputedFullTextSearchStrategy<T extends ObjectLiteral>
+export class PrecomputedFullTextSearchStrategy<T extends ObjectLiteral>
   implements SearchStrategy<T>
 {
   constructor(

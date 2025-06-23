@@ -14,7 +14,6 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@src/modules/auth/libs/guard/jwt-auth-guard';
 import { RolesGuard } from '@src/modules/auth/libs/guard/roles.guard';
-import { Price } from '../../domain/value-objects/price.value-object';
 import { UserRoles } from '@src/modules/user/domain/user.types';
 import { Roles } from '@src/modules/auth/roles.decorator';
 
@@ -37,7 +36,7 @@ export class CreateBikeController {
     const command = new CreateBikeCommand({
       ...body,
       ownerId: request.user.id,
-      pricePerDay: new Price(body.pricePerDay),
+      pricePerDay: body.pricePerDay,
     });
 
     const result: AggregateId = await this.commandBus.execute(command);

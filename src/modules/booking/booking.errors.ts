@@ -6,3 +6,9 @@ export const CannotCancelBookingError = defineDomainError({
   code: 'BOOKING.CANNOT_CANCEL',
   status: HttpStatus.CONFLICT,
 });
+
+export const BookingNotFoundError = defineDomainError({
+  message: 'Booking not found',
+  code: 'BOOKING.NOT_FOUND',
+  status: HttpStatus.NOT_FOUND,
+});
