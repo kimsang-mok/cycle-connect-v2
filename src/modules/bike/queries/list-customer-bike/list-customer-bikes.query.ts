@@ -12,7 +12,7 @@ export class ListCustomerBikesQuery extends PaginatedQueryBase {
 
   readonly maxPrice?: number;
 
-  readonly ownerId: string;
+  // readonly ownerId: string;
 
   constructor(props: PaginatedParams<ListCustomerBikesQuery>) {
     super(props);
@@ -21,6 +21,5 @@ export class ListCustomerBikesQuery extends PaginatedQueryBase {
     this.enginePower = props.enginePower;
     this.minPrice = props.minPrice;
     this.maxPrice = props.maxPrice;
-    this.ownerId = props.ownerId;
   }
 }
