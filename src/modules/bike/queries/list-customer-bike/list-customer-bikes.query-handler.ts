@@ -19,7 +19,6 @@ export class ListCustomerBikesQueryHandler
   async execute(
     query: ListCustomerBikesQuery,
   ): Promise<Paginated<BikeOrmEntity>> {
-    console.log('firstaaa');
     const queryUtil = new QueryUtil<BikeOrmEntity>(
       this.dataSource,
       BikeOrmEntity,
