@@ -26,6 +26,7 @@ export const routesV1 = {
     register: `${authRoot}/register`,
     verify: `${authRoot}/verify`,
     login: `${authRoot}/login`,
+    me: `${authRoot}/me`,
     refresh: `${authRoot}/refresh`,
   },
 

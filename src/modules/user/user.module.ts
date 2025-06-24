@@ -6,10 +6,14 @@ import { CreateUserService } from './commands/create-user/create-user.service';
 import { UserMapper } from './user.mapper';
 import { CqrsModule } from '@nestjs/cqrs';
 import { USER_REPOSITORY } from './user.di-tokens';
+import { GetUserByIdController } from './queries/get-my-user/get-user-by-id.controller';
+import { GetUserByIdQueryHandler } from './queries/get-my-user/get-user-by-id.query-handler';
 
-const controllers = [];
+const controllers = [GetUserByIdController];
 
 const commandHandlers: Provider[] = [CreateUserService];
+
+const queryHandlers: Provider[] = [GetUserByIdQueryHandler];
 
 const mappers: Provider[] = [UserMapper];
 
@@ -23,7 +27,13 @@ const repositories: Provider[] = [
 @Module({
   imports: [CqrsModule],
   controllers: [...controllers],
-  providers: [Logger, ...repositories, ...commandHandlers, ...mappers],
+  providers: [
+    Logger,
+    ...repositories,
+    ...commandHandlers,
+    ...queryHandlers,
+    ...mappers,
+  ],
   exports: [USER_REPOSITORY, UserMapper],
 })
 export class UserModule {}
