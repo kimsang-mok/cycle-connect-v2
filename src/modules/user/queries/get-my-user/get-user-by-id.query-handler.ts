@@ -6,7 +6,6 @@ import { UserRepositoryPort } from '../../database/ports/user.repository.port';
 import { USER_REPOSITORY } from '../../user.di-tokens';
 import { UserNotFoundError } from '../../user.errors';
 
-// @QueryHandler(GetUserByIdQuery)
 @QueryHandler(GetUserByIdQuery)
 export class GetUserByIdQueryHandler
   implements IQueryHandler<GetUserByIdQuery, UserEntity>

@@ -17,7 +17,7 @@ import { Roles } from '@src/modules/auth/roles.decorator';
 import { UserRoles } from '../../domain/user.types';
 
 @Controller(routesV1.version)
-@ApiTags(routesV1.user.tag)
+@ApiTags(routesV1.auth.tag)
 export class GetUserByIdController {
   constructor(
     private readonly queryBus: QueryBus,
@@ -37,6 +37,7 @@ export class GetUserByIdController {
     const query = new GetUserByIdQuery({ id: userId });
 
     const result = await this.queryBus.execute(query);
+
     return this.userMapper.toResponse(result);
   }
 }

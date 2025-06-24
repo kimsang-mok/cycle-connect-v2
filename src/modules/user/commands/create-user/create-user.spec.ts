@@ -21,6 +21,7 @@ describe('CreateUserService', () => {
     password: 'Password123',
     role: UserRoles.renter,
   };
+
   beforeEach(() => {
     userRepo = mockInterface<UserRepositoryPort>();
 
@@ -31,11 +32,11 @@ describe('CreateUserService', () => {
   });
 
   it('should create and insert a user, then return its id', async () => {
+    const mockId = 'mock-user-id';
     const command = new CreateUserCommand(userCommandProps);
 
     const mockUser = mockAggregateRoot(UserEntity, {
-      ...command,
-      email: { value: command.email } as any, // mock as Email value object
+      id: mockId,
       password: mockValueObject(Password, {
         overrides: { compare: jest.fn().mockResolvedValue(false) },
         value: 'hashed-password',
@@ -46,12 +47,11 @@ describe('CreateUserService', () => {
 
     const result = await service.execute(command);
 
-    // Verify the user was inserted
     expect(typeof result).toBe('string');
 
     expect(userRepo.insert).toHaveBeenCalledWith(mockUser);
 
-    expect(result).toEqual(command.id);
+    expect(result).toEqual(mockId);
   });
 
   it('should throw an error if user already exists', async () => {

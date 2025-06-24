@@ -5,6 +5,6 @@ export class GetUserByIdQuery extends QueryBase {
 
   constructor(props: GetUserByIdQuery) {
     super();
-    this.id = props?.id;
+    this.id = props.id;
   }
 }
