@@ -11,7 +11,6 @@ import { UserEntity } from '../../domain/user.entity';
 import { Password } from '../../domain/value-objects/password.value-object';
 import { UserAlreadyExistsError } from '../../user.errors';
 import { ConflictException } from '@src/libs/exceptions';
-// import { UserAlreadyExistsError } from '../../user.errors';
 
 describe('CreateUserService', () => {
   let service: CreateUserService;
