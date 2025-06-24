@@ -2,6 +2,7 @@ import { Price } from '@src/modules/bike/domain/value-objects/price.value-object
 import { RentalPeriod } from '@src/modules/bike/domain/value-objects/rental-period.value-object';
 
 export enum BookingStatus {
+  pending = 'pending',
   confirmed = 'confirmed',
   cancelled = 'cancelled',
   completed = 'completed',

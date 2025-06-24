@@ -17,7 +17,7 @@ describe('CreateBikeService', () => {
     model: 'Honda Wave',
     enginePower: 125,
     description: 'A fuel-efficient bike',
-    pricePerDay: new Price(12.5),
+    pricePerDay: 12.5,
     photoKeys: ['uploads/user-123/photo1.jpg'],
     thumbnailKey: 'uploads/user-123/photo1.jpg',
   };
@@ -37,7 +37,11 @@ describe('CreateBikeService', () => {
 
     const bikeId = 'mock-bike-id';
 
-    const mockBike = mockAggregateRoot(BikeEntity, { ...command, id: bikeId });
+    const mockBike = mockAggregateRoot(BikeEntity, {
+      ...command,
+      pricePerDay: new Price(command.pricePerDay),
+      id: bikeId,
+    });
 
     jest.spyOn(BikeEntity, 'create').mockReturnValue(mockBike);
 

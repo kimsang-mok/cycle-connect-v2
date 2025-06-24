@@ -1,6 +1,5 @@
 import { Command, CommandProps } from '@src/libs/ddd';
 import { BikeTypes } from '../../domain/bike.types';
-import { Price } from '../../domain/value-objects/price.value-object';
 
 export class CreateBikeCommand extends Command {
   readonly ownerId: string;
@@ -11,7 +10,7 @@ export class CreateBikeCommand extends Command {
 
   readonly enginePower: number;
 
-  readonly pricePerDay: Price;
+  readonly pricePerDay: number;
 
   readonly description: string;
 

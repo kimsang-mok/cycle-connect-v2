@@ -6,6 +6,7 @@ import { BIKE_REPOSITORY } from '../../bike.di-tokens';
 import { BikeRepositoryPort } from '../../database/ports/bike.repository.port';
 import { BikeEntity } from '../../domain/bike.entity';
 import { Transactional } from '@src/libs/application/decorators';
+import { Price } from '../../domain/value-objects/price.value-object';
 
 @CommandHandler(CreateBikeCommand)
 export class CreateBikeService
@@ -23,7 +24,7 @@ export class CreateBikeService
       ownerId: command.ownerId,
       enginePower: command.enginePower,
       description: command.description,
-      pricePerDay: command.pricePerDay,
+      pricePerDay: new Price(command.pricePerDay),
       photoKeys: command.photoKeys,
       thumbnailKey: command.thumbnailKey,
     });
