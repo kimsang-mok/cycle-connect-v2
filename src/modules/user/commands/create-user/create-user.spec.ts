@@ -35,7 +35,6 @@ describe('CreateUserService', () => {
 
     const mockUser = mockAggregateRoot(UserEntity, {
       ...command,
-      // id: userId,
       email: { value: command.email } as any, // mock as Email value object
       password: mockValueObject(Password, {
         overrides: { compare: jest.fn().mockResolvedValue(false) },
@@ -47,15 +46,11 @@ describe('CreateUserService', () => {
 
     const result = await service.execute(command);
 
+    // Verify the user was inserted
     expect(typeof result).toBe('string');
-    expect(userRepo.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        getProps: expect.any(Function),
-        get id() {
-          return expect.any(String);
-        },
-      }),
-    );
+
+    expect(userRepo.insert).toHaveBeenCalledWith(mockUser);
+
     expect(result).toEqual(command.id);
   });
 
