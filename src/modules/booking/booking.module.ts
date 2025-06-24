@@ -43,5 +43,6 @@ const repositories: Provider[] = [
     ...eventHandlers,
     ...mappers,
   ],
+  exports: [BOOKING_REPOSITORY],
 })
 export class BookingModule {}

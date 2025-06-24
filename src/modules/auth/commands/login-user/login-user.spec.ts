@@ -38,7 +38,7 @@ describe('LoginUserService', () => {
     await expect(service.execute(command)).rejects.toThrow(UserNotFoundError);
   });
 
-  it.only('should throw InvalidCredentialError if password does not match', async () => {
+  it('should throw InvalidCredentialError if password does not match', async () => {
     const mockUser = mockAggregateRoot(UserEntity, {
       password: mockValueObject(Password, {
         overrides: { compare: jest.fn().mockResolvedValue(false) },

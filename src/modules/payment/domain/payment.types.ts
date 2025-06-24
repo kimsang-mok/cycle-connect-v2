@@ -12,7 +12,7 @@ export interface PaymentProps {
 }
 
 export enum PaymentMethod {
-  creditCart = 'credit_card',
+  creditCard = 'credit_card',
   paypal = 'paypal',
 }
 

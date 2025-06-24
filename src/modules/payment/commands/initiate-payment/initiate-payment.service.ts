@@ -8,20 +8,49 @@ import { PaymentGatewayServicePort } from '@src/libs/payment-gateway/ports/payme
 import { PAYMENT_REPOSITORY } from '../../payment.di-tokens';
 import { PaymentRepositoryPort } from '../../database/ports/payment.repository.port';
 import { Transactional } from '@src/libs/application/decorators';
+import { BookingRepositoryPort } from '@src/modules/booking/database/ports/booking.repository.port';
+import { BOOKING_REPOSITORY } from '@src/modules/booking/booking.di-tokens';
+import { BookingNotFoundError } from '@src/modules/booking/booking.errors';
+import {
+  InvalidPaymentAmountError,
+  PaymentAuthorizationFailedError,
+} from '../../payment.errors';
+
+export type InitiatePaymentResult =
+  | { success: true; id: string }
+  | {
+      success: false;
+      id: string;
+      error: InstanceType<typeof PaymentAuthorizationFailedError>;
+    };
 
 @CommandHandler(InitiatePaymentCommand)
 export class InitiatePaymentService
-  implements ICommandHandler<InitiatePaymentCommand, any>
+  implements ICommandHandler<InitiatePaymentCommand, InitiatePaymentResult>
 {
   constructor(
     @Inject(PAYMENT_GATEWAY)
     private readonly gateway: PaymentGatewayServicePort,
     @Inject(PAYMENT_REPOSITORY)
     private readonly paymentRepo: PaymentRepositoryPort,
+    @Inject(BOOKING_REPOSITORY)
+    private readonly bookingRepo: BookingRepositoryPort,
   ) {}
 
   @Transactional()
-  async execute(command: InitiatePaymentCommand): Promise<any> {
+  async execute(
+    command: InitiatePaymentCommand,
+  ): Promise<InitiatePaymentResult> {
+    const booking = await this.bookingRepo.findOneById(command.bookingId);
+
+    if (!booking) {
+      throw new BookingNotFoundError();
+    }
+
+    if (booking.getProps().totalPrice.unpack() !== command.amount) {
+      throw new InvalidPaymentAmountError();
+    }
+
     const payment = PaymentEntity.create({
       ...command,
       amount: new Price(command.amount),
@@ -40,6 +69,12 @@ export class InitiatePaymentService
     }
 
     await this.paymentRepo.insert(payment);
-    return payment.id;
+    return result.success
+      ? { success: true, id: payment.id }
+      : {
+          success: false,
+          id: payment.id,
+          error: new PaymentAuthorizationFailedError(),
+        };
   }
 }
