@@ -17,6 +17,7 @@ export class UserVerificationEntity extends AggregateRoot<UserVerificationProps>
     const id = randomUUID();
     const props: UserVerificationProps = {
       userId: create.userId,
+      token: create.token,
       status: VerificationStatus.pending,
     };
 
@@ -34,6 +35,18 @@ export class UserVerificationEntity extends AggregateRoot<UserVerificationProps>
     );
 
     return verification;
+  }
+
+  updateToken(newToken: string, email: string) {
+    this.props.token = newToken;
+
+    this.addEvent(
+      new UserVerificationCreatedDomainEvent({
+        aggregateId: this.id,
+        token: newToken,
+        email,
+      }),
+    );
   }
 
   verify(): void {

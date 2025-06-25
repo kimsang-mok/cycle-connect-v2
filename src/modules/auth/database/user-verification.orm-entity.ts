@@ -16,6 +16,9 @@ export class UserVerificationOrmEntity {
   })
   status: VerificationStatus;
 
+  @Column()
+  token: string;
+
   @Column({ type: 'timestamp' })
   verifiedAt?: Date;
 

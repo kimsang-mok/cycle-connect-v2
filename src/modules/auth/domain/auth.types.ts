@@ -9,6 +9,7 @@ export enum VerificationStatus {
 export interface UserVerificationProps {
   userId: string;
   status: VerificationStatus;
+  token: string;
   verifiedAt?: Date;
 }
 

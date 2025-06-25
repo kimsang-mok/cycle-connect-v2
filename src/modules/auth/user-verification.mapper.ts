@@ -13,6 +13,7 @@ export class UserVerificationMapper
     orm.id = copy.id;
     orm.userId = copy.userId;
     orm.status = copy.status;
+    orm.token = copy.token;
     orm.verifiedAt = copy.verifiedAt;
     orm.createdAt = copy.createdAt;
     return orm;
@@ -25,6 +26,7 @@ export class UserVerificationMapper
       props: {
         userId: record.userId,
         status: record.status,
+        token: record.token,
         verifiedAt: record.verifiedAt,
       },
     });
