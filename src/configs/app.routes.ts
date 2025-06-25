@@ -37,11 +37,6 @@ export const routesV1 = {
     activate: `${bikeRoot}/:id/activate`,
     deactivate: `${bikeRoot}/:id/deactivate`,
     myBikes: `${bikeRoot}/me`,
-
-    // Add customer-specific bike routes
-    customer: {
-      available: `${bikeRoot}/available`,
-    },
   },
 
   booking: {

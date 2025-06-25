@@ -3,7 +3,7 @@ import { BikeOrmEntity } from '../../database/bike.orm-entity';
 import { DataSource } from 'typeorm';
 import {
   FilterOperator,
-  PercomputedFullTextSearchStrategy,
+  PrecomputedFullTextSearchStrategy,
   QueryUtil,
   SortDirection,
 } from '@src/libs/db';
@@ -25,7 +25,7 @@ export class ListCustomerBikesQueryHandler
     );
 
     const result = await queryUtil
-      .search(new PercomputedFullTextSearchStrategy(), query.searchTerm)
+      .search(new PrecomputedFullTextSearchStrategy(), query.searchTerm)
       .filter({
         field: 'isActive',
         operator: FilterOperator.equal,

@@ -19,7 +19,7 @@ export class ListCustomerBikesController {
     private readonly bikeMapper: BikeMapper,
   ) {}
 
-  @Get(routesV1.bike.customer.available)
+  @Get(routesV1.bike.root)
   @ApiOperation({
     summary: 'Find available bikes for customer',
   })
@@ -27,7 +27,6 @@ export class ListCustomerBikesController {
     status: HttpStatus.OK,
     type: BikePaginatedResponseDto,
   })
-  // @ApiBearerAuth()
   async list(
     @Body() body: ListCustomerBikesRequestDto,
     @Query() queryParams: PaginatedQueryRequestDto,
