@@ -19,7 +19,7 @@ export class SendVerificationTokenWhenUserVerificationIsCreatedDomainEventHandle
     const clientUrl = this.configService.getOrThrow('app.frontendDomain', {
       infer: true,
     });
-    const url = new URL(`${clientUrl}/auth/confirm-email`);
+    const url = new URL(`${clientUrl}/auth/verify`);
     url.searchParams.set('token', event.token);
 
     await this.mailerService.sendMail({
