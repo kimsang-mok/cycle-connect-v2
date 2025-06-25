@@ -7,4 +7,14 @@ export class UserResponseDto extends ResponseBase {
     description: "User's email address",
   })
   email: string | null;
+
+  @ApiProperty({
+    example: 'John',
+  })
+  firstName: string;
+
+  @ApiProperty({
+    example: 'Doe',
+  })
+  lastName: string;
 }

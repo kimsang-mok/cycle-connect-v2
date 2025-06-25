@@ -15,6 +15,8 @@ export class UserMapper
     const orm = new UserOrmEntity();
     orm.id = copy.id;
     orm.email = copy.email.unpack();
+    orm.firstName = copy.firstName;
+    orm.lastName = copy.lastName;
     orm.password = copy.password.unpack();
     orm.role = copy.role;
     orm.createdAt = copy.createdAt;
@@ -29,6 +31,8 @@ export class UserMapper
       updatedAt: new Date(record.updatedAt),
       props: {
         email: new Email(record.email),
+        firstName: record.firstName,
+        lastName: record.lastName,
         password: Password.fromHashed(record.password),
         role: record.role,
       },
@@ -40,6 +44,8 @@ export class UserMapper
     const props = entity.getProps();
     const response = new UserResponseDto(entity);
     response.email = props.email?.unpack();
+    response.firstName = props.firstName;
+    response.lastName = props.lastName;
     return response;
   }
 }

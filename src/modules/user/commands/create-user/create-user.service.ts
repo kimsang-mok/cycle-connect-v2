@@ -26,6 +26,8 @@ export class CreateUserService
 
     const user = UserEntity.create({
       email: new Email(command.email),
+      firstName: command.firstName,
+      lastName: command.lastName,
       password: hashedPassword,
       role: command.role,
     });

@@ -7,6 +7,9 @@ import {
   MinLength,
 } from 'class-validator';
 import { UserRoles } from '../../domain/user.types';
+import { IsValidName } from '@tests/utils/validators';
+import { Transform } from 'class-transformer';
+import { CapitalizeName } from '@tests/utils/transformers';
 
 export class CreateUserRequestDto {
   @ApiPropertyOptional({
@@ -17,6 +20,22 @@ export class CreateUserRequestDto {
   @MinLength(5)
   @IsEmail()
   readonly email: string;
+
+  @ApiProperty({
+    example: 'John',
+  })
+  @IsString()
+  @IsValidName()
+  @Transform(CapitalizeName())
+  readonly firstName: string;
+
+  @ApiProperty({
+    example: 'Doe',
+  })
+  @IsString()
+  @IsValidName()
+  @Transform(CapitalizeName())
+  readonly lastName: string;
 
   @ApiProperty({
     example: 'strongPassword123',

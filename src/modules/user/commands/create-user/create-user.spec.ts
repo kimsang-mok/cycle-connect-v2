@@ -18,6 +18,8 @@ describe('CreateUserService', () => {
 
   const userCommandProps = {
     email: 'test@mail.com',
+    firstName: 'Test',
+    lastName: 'User',
     password: 'Password123',
     role: UserRoles.renter,
   };
