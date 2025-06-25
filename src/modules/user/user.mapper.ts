@@ -46,6 +46,7 @@ export class UserMapper
     response.email = props.email?.unpack();
     response.firstName = props.firstName;
     response.lastName = props.lastName;
+    response.role = props.role;
     return response;
   }
 }
