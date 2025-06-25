@@ -28,6 +28,7 @@ export const routesV1 = {
     login: `${authRoot}/login`,
     me: `${authRoot}/me`,
     refresh: `${authRoot}/refresh`,
+    resendVerification: `${authRoot}/resend-verification`,
   },
 
   bike: {

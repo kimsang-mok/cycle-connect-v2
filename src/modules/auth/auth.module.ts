@@ -25,12 +25,15 @@ import { LoginUserService } from './commands/login-user/login-user.service';
 import { LoginUserController } from './commands/login-user/login-user.controller';
 import { RefreshTokenService } from './commands/refresh-token/refresh-token.service';
 import { RefreshTokenController } from './commands/refresh-token/refresh-token.controller';
+import { ResendVerificationController } from './commands/resend-verification/resend-verification.controller';
+import { ResendVerificationService } from './commands/resend-verification/resend-verification.service';
 
 const controllers = [
   RegisterUserController,
   VerifyAccountController,
   LoginUserController,
   RefreshTokenController,
+  ResendVerificationController,
 ];
 
 const services: Provider[] = [
@@ -46,6 +49,7 @@ const commandHandlers: Provider[] = [
   VerifyAccountService,
   LoginUserService,
   RefreshTokenService,
+  ResendVerificationService,
 ];
 
 const eventHandlers: Provider[] = [
