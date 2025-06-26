@@ -1,14 +1,21 @@
 import { Mapper } from '@src/libs/ddd';
 import { BikeEntity } from './domain/bike.entity';
 import { BikeResponseDto } from './dtos/bike.response.dto';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Price } from './domain/value-objects/price.value-object';
 import { BikeOrmEntity } from './database/bike.orm-entity';
+import { FILE_URL_RESOLVER } from '@src/libs/uploader/uploader.di-tokens';
+import { FileUrlResolverServicePort } from '@src/libs/uploader/ports/file-url-resolver.service.port';
 
 @Injectable()
 export class BikeMapper
   implements Mapper<BikeEntity, BikeOrmEntity, BikeResponseDto>
 {
+  constructor(
+    @Inject(FILE_URL_RESOLVER)
+    private readonly fileUrlResolver: FileUrlResolverServicePort,
+  ) {}
+
   toPersistence(entity: BikeEntity): BikeOrmEntity {
     const copy = entity.getProps();
     const orm = new BikeOrmEntity();
@@ -58,12 +65,10 @@ export class BikeMapper
     response.pricePerDay = props.pricePerDay.unpack();
     response.description = props.description;
     response.isActive = props.isActive;
-    response.photoUrls = props.photoKeys;
-    response.thumbnailUrl = props.thumbnailKey;
-    // response.photoUrls = props.photoKeys.map((key) =>
-    //   this.fileUrlResolver.resolveUrl(key),
-    // );
-    // response.thumbnailUrl = this.fileUrlResolver.resolveUrl(props.thumbnailKey);
+    response.photoUrls = props.photoKeys.map((key) =>
+      this.fileUrlResolver.resolveUrl(key),
+    );
+    response.thumbnailUrl = this.fileUrlResolver.resolveUrl(props.thumbnailKey);
     return response;
   }
 }

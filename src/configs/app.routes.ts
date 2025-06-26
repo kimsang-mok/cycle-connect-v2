@@ -10,6 +10,7 @@ const authRoot = 'auth';
 const bikeRoot = 'bikes';
 const bookingRoot = 'bookings';
 const paymentRoot = 'payments';
+const uploadRoot = 'uploads';
 
 // Api Versions
 const v1 = 'v1';
@@ -51,5 +52,10 @@ export const routesV1 = {
     tag: 'Payment',
     root: paymentRoot,
     authorize: `${paymentRoot}/authorize`,
+  },
+
+  upload: {
+    tag: 'Upload',
+    presign: `${uploadRoot}/presign`,
   },
 };

@@ -27,6 +27,8 @@ import { BikeModule } from './modules/bike/bike.module';
 import { BookingModule } from './modules/booking/booking.module';
 import paymentGatewayConfig from './libs/payment-gateway/config/payment-gateway.config';
 import { PaymentModule } from './modules/payment/payment.module';
+import fileConfig from './libs/uploader/config/file.config';
+import { FileModule } from './modules/file/file.module';
 
 const interceptors: Provider[] = [
   {
@@ -60,6 +62,7 @@ const filters: Provider[] = [
         authConfig,
         mailerConfig,
         paymentGatewayConfig,
+        fileConfig,
       ],
       envFilePath: getEnvFilePath(),
     }),
@@ -79,6 +82,7 @@ const filters: Provider[] = [
     BikeModule,
     BookingModule,
     PaymentModule,
+    FileModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],
