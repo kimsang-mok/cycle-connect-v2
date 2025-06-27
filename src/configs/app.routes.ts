@@ -53,6 +53,7 @@ export const routesV1 = {
     root: paymentRoot,
     createOrder: `${paymentRoot}/create-order`,
     authorize: `${paymentRoot}/authorize`,
+    capture: `${paymentRoot}/capture`,
   },
 
   upload: {

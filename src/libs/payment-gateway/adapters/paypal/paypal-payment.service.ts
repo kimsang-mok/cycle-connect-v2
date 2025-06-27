@@ -154,6 +154,7 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
     try {
       const token = await this.getAccessToken();
 
+      console.log('Data: ', data);
       const { data: captureData } = await firstValueFrom(
         this.http.post(
           `/v2/payments/authorizations/${data.authorizationId}/capture`,
@@ -169,6 +170,7 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
           },
         ),
       );
+      console.log('data', data);
 
       return {
         success: true,

@@ -30,3 +30,15 @@ export const CannotCreateOrderError = defineDomainError({
   code: 'PAYMENT.CANNOT_CREATE_ORDER',
   status: HttpStatus.BAD_REQUEST,
 });
+
+export const CannotChargeUnconfirmedBookingError = defineDomainError({
+  message: 'Cannot charge an unconfirmed booking',
+  code: 'PAYMENT.CANNOT_CHARGE_UNCONFIRMED_BOOKING',
+  status: HttpStatus.BAD_REQUEST,
+});
+
+export const CannotCaptureFundError = defineDomainError({
+  message: 'Cannot capture fund',
+  code: 'PAYMENT.CANNOT_CAPTURE_FUND',
+  status: HttpStatus.BAD_REQUEST,
+});
