@@ -11,6 +11,11 @@ export class PaymentStatus extends ValueObject<PaymentStatusProps> {
   get value(): PaymentStatusProps['value'] {
     return this.props.value;
   }
+
+  static initiate(): PaymentStatus {
+    return new PaymentStatus({ value: PaymentStatusType.initiated });
+  }
+
   static pending(): PaymentStatus {
     return new PaymentStatus({ value: PaymentStatusType.pending });
   }

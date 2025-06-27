@@ -24,3 +24,9 @@ export const CannotCaptureUnAuthorizedPaymentError = defineDomainError({
   code: 'PAYMENT.CANNOT_CAPTURE_UNAUTHORIZED',
   status: HttpStatus.CONFLICT,
 });
+
+export const CannotCreateOrderError = defineDomainError({
+  message: 'Cannot create an order',
+  code: 'PAYMENT.CANNOT_CREATE_ORDER',
+  status: HttpStatus.BAD_REQUEST,
+});

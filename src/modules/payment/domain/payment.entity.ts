@@ -16,7 +16,8 @@ export class PaymentEntity extends AggregateRoot<PaymentProps> {
 
     const props: PaymentProps = {
       ...create,
-      status: PaymentStatus.pending(),
+      orderId: '',
+      status: PaymentStatus.initiate(),
     };
 
     const payment = new PaymentEntity({ id, props });
@@ -31,9 +32,13 @@ export class PaymentEntity extends AggregateRoot<PaymentProps> {
       new PaymentSucceededDomainEvent({
         aggregateId: this.id,
         bookingId: this.props.bookingId,
-        orderId: this.props.orderId,
       }),
     );
+  }
+
+  markPending(orderId: string): void {
+    this.props.orderId = orderId;
+    this.props.status = PaymentStatus.pending();
   }
 
   markAuthorized(authorizationId: string): void {

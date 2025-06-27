@@ -4,40 +4,40 @@ import { routesV1 } from '@src/configs/app.routes';
 import { InitiatePaymentCommand } from './initiate-payment.command';
 import { InitiatePaymentRequestDto } from './initiate-payment.request.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiErrorResponse, IdResponse } from '@src/libs/api';
+import { ApiErrorResponse } from '@src/libs/api';
 import { InitiatePaymentResult } from './initiate-payment.service';
-import { PaymentAuthorizationFailedError } from '../../payment.errors';
+import { CannotCreateOrderError } from '../../payment.errors';
+import { InitiatePaymentResponseDto } from './initiate-payment.response.dto';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.payment.tag)
 export class InitiatePaymentController {
   constructor(readonly commandBus: CommandBus) {}
 
-  @Post(routesV1.payment.authorize)
+  @Post(routesV1.payment.createOrder)
   @ApiOperation({
-    summary: 'Authorize payment',
+    summary: 'Create payment order',
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    type: IdResponse,
+    type: InitiatePaymentResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     type: ApiErrorResponse,
   })
-  async initiate(@Body() body: InitiatePaymentRequestDto) {
+  async initiate(
+    @Body() body: InitiatePaymentRequestDto,
+  ): Promise<InitiatePaymentResponseDto> {
     const command = new InitiatePaymentCommand(body);
 
     const result: InitiatePaymentResult =
       await this.commandBus.execute(command);
 
-    if (
-      !result.success &&
-      result.error instanceof PaymentAuthorizationFailedError
-    ) {
+    if (!result.success && result.error instanceof CannotCreateOrderError) {
       throw result.error;
     }
 
-    return result.id;
+    return { paypalOrderId: result.paypalOrderId! };
   }
 }

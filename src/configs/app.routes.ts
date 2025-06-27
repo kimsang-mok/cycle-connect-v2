@@ -51,6 +51,7 @@ export const routesV1 = {
   payment: {
     tag: 'Payment',
     root: paymentRoot,
+    createOrder: `${paymentRoot}/create-order`,
     authorize: `${paymentRoot}/authorize`,
   },
 

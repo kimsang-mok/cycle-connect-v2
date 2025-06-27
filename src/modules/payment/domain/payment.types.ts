@@ -17,10 +17,12 @@ export enum PaymentMethod {
 }
 
 export enum PaymentStatusType {
+  initiated = 'initiated',
   pending = 'pending',
   authorized = 'authorized',
   succeeded = 'succeeded',
   failed = 'failed',
 }
 
-export interface CreatePaymentProps extends Omit<PaymentProps, 'status'> {}
+export interface CreatePaymentProps
+  extends Omit<PaymentProps, 'status' | 'orderId'> {}

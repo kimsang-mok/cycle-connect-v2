@@ -30,7 +30,7 @@ export class PaymentMapper
       createdAt: new Date(record.createdAt),
       updatedAt: new Date(record.createdAt),
       props: {
-        bookingId: record.id,
+        bookingId: record.bookingId,
         orderId: record.orderId,
         authorizationId: record.authorizationId,
         amount: new Price(record.amount),
