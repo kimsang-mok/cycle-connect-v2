@@ -78,8 +78,8 @@ export class InitiatePaymentService
       await this.paymentRepo.insert(payment);
     }
 
-    return result.success
-      ? { success: true, paypalOrderId: payment.getProps().orderId }
+    return result.paypalOrderId
+      ? { success: true, paypalOrderId: result.paypalOrderId }
       : {
           success: false,
           paypalOrderId: undefined,

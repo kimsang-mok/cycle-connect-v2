@@ -63,7 +63,7 @@ export class CaptureFundService
 
     const result = await this.gateway.capture({
       authorizationId: payment.getProps().authorizationId!,
-      amount: Number(payment.amount.unpack()),
+      amount: Number(payment.getProps().amount.unpack()),
     });
 
     if (!result.success && !result.transactionId) {

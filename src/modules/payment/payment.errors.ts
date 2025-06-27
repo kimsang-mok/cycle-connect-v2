@@ -42,3 +42,9 @@ export const CannotCaptureFundError = defineDomainError({
   code: 'PAYMENT.CANNOT_CAPTURE_FUND',
   status: HttpStatus.BAD_REQUEST,
 });
+
+export const InvalidStateTransitionError = defineDomainError({
+  message: 'State transition is invalid',
+  code: 'PAYMEENT.INVALID_STATE_TRANSITION',
+  status: HttpStatus.BAD_REQUEST,
+});

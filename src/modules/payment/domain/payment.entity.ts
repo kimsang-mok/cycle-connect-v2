@@ -1,12 +1,16 @@
 import { AggregateId, AggregateRoot } from '@src/libs/ddd';
-import { CreatePaymentProps, PaymentProps } from './payment.types';
+import {
+  CreatePaymentProps,
+  PaymentProps,
+  PaymentStatusType,
+} from './payment.types';
 import { randomUUID } from 'crypto';
 import { PaymentStatus } from './value-objects/payment-status.value-object';
-import { Price } from '@src/modules/bike/domain/value-objects/price.value-object';
 import { ArgumentInvalidException } from '@src/libs/exceptions';
 import { PaymentSucceededDomainEvent } from './events/payment-succeeded.domain-event';
 import { PaymentFailedDomainEvent } from './events/payment-failed.domain-event';
 import { PaymentAuthorizedDomainEvent } from './events/payment-authorized.domain-event';
+import { InvalidStateTransitionError } from '../payment.errors';
 
 export class PaymentEntity extends AggregateRoot<PaymentProps> {
   protected readonly _id: AggregateId;
@@ -37,6 +41,10 @@ export class PaymentEntity extends AggregateRoot<PaymentProps> {
   }
 
   markPending(orderId: string): void {
+    if (!this.props.status.is(PaymentStatusType.initiated)) {
+      throw new InvalidStateTransitionError();
+    }
+
     this.props.orderId = orderId;
     this.props.status = PaymentStatus.pending();
   }
@@ -71,13 +79,19 @@ export class PaymentEntity extends AggregateRoot<PaymentProps> {
     return this.props.status.isFinal();
   }
 
-  get amount(): Price {
-    return this.props.amount;
-  }
-
   public validate(): void {
     if (!this.props.bookingId) {
       throw new ArgumentInvalidException('Booking Id is required');
+    }
+
+    if (Number(this.props.amount.unpack()) < 0) {
+      throw new ArgumentInvalidException('Invalid amount');
+    }
+
+    if (this.props.authorizationId && !this.props.orderId) {
+      throw new ArgumentInvalidException(
+        'AuthorizationId cannot exist without OrderId',
+      );
     }
   }
 }
