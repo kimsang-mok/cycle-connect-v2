@@ -1,9 +1,15 @@
 import { PaymentMethod } from '@src/modules/payment/domain/payment.types';
 
-export interface AuthorizeProps {
+export interface CreateOrderProps {
   orderId: string;
   amount: number;
   method: PaymentMethod;
+}
+
+export interface CreateOrderResult {
+  success: boolean;
+  paypalOrderId?: string;
+  reason?: string;
 }
 
 export interface AuthorizeResult {
@@ -24,6 +30,7 @@ export interface CaptureResult {
 }
 
 export interface PaymentGatewayServicePort {
-  authorize(data: AuthorizeProps): Promise<AuthorizeResult>;
+  createOrder(data: CreateOrderProps): Promise<CreateOrderResult>;
+  getAuthorizationId(orderId: string): Promise<AuthorizeResult>;
   capture(data: CaptureProps): Promise<CaptureResult>;
 }

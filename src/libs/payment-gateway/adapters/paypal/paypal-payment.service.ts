@@ -5,11 +5,12 @@ import { AllConfigType } from '@src/configs/config.type';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom } from 'rxjs';
 import {
-  AuthorizeResult,
-  AuthorizeProps,
   CaptureProps,
   CaptureResult,
   PaymentGatewayServicePort,
+  CreateOrderProps,
+  CreateOrderResult,
+  AuthorizeResult,
 } from '../../ports/payment-gateway.service.port';
 
 @Injectable()
@@ -18,6 +19,10 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
   private readonly clientSecret: string;
   private readonly tokenEndpoint = '/v1/oauth2/token';
   private readonly createOrderEndpoint = '/v2/checkout/orders';
+
+  private authorizeEnpoint(orderId: string): string {
+    return `/v2/checkout/orders/${orderId}/authorize`;
+  }
 
   constructor(
     private readonly http: HttpService,
@@ -53,7 +58,7 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
     return data.access_token;
   }
 
-  async authorize(data: AuthorizeProps): Promise<AuthorizeResult> {
+  async createOrder(data: CreateOrderProps): Promise<CreateOrderResult> {
     try {
       const token = await this.getAccessToken();
 
@@ -62,6 +67,14 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
           this.createOrderEndpoint,
           {
             intent: 'AUTHORIZE',
+            application_context: {
+              brand_name: this.configService.getOrThrow('app.name', {
+                infer: true,
+              }),
+              shipping_preference: 'NO_SHIPPING',
+              return_url: `${this.configService.getOrThrow('app.frontendDomain', { infer: true })}/checkout/success`,
+              cancel_url: `${this.configService.getOrThrow('app.frontendDomain', { infer: true })}/checkout/cancel`,
+            },
             purchase_units: [
               {
                 reference_id: data.orderId,
@@ -80,15 +93,12 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
         ),
       );
 
-      const authorizationId =
-        order?.purchase_units?.[0]?.payments?.authorizations?.[0]?.id;
+      const paypalOrderId = order?.id;
 
       return {
-        success: !!authorizationId,
-        authorizationId,
-        reason: authorizationId
-          ? undefined
-          : 'Authorization ID missing from response',
+        success: !!paypalOrderId,
+        paypalOrderId,
+        reason: paypalOrderId ? undefined : 'Missing order Id from PayPal',
       };
     } catch (error: any) {
       const reason =
@@ -103,10 +113,48 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
     }
   }
 
+  async getAuthorizationId(orderId: string): Promise<AuthorizeResult> {
+    try {
+      const token = await this.getAccessToken();
+
+      const { data: order } = await firstValueFrom(
+        this.http.post(
+          this.authorizeEnpoint(orderId),
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        ),
+      );
+
+      const authorizationId =
+        order?.purchase_units?.[0]?.payments?.authorizations?.[0]?.id;
+
+      return {
+        success: !!authorizationId,
+        authorizationId: authorizationId,
+      };
+    } catch (error: any) {
+      const reason =
+        error.response?.data?.message ||
+        error.response?.data?.details?.[0]?.issue ||
+        error.response?.data?.error_description ||
+        error.message;
+      console.error('Failed to authorize payment with PayPal: ', reason);
+
+      return {
+        success: false,
+        authorizationId: undefined,
+        reason,
+      };
+    }
+  }
+
   async capture(data: CaptureProps): Promise<CaptureResult> {
     try {
       const token = await this.getAccessToken();
 
+      console.log('Data: ', data);
       const { data: captureData } = await firstValueFrom(
         this.http.post(
           `/v2/payments/authorizations/${data.authorizationId}/capture`,
@@ -122,6 +170,7 @@ export class PaypalPaymentService implements PaymentGatewayServicePort {
           },
         ),
       );
+      console.log('data', data);
 
       return {
         success: true,

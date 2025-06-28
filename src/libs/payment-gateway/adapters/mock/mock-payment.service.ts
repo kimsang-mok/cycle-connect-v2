@@ -1,15 +1,16 @@
 import {
-  AuthorizeProps,
   AuthorizeResult,
   CaptureProps,
   CaptureResult,
+  CreateOrderProps,
+  CreateOrderResult,
   PaymentGatewayServicePort,
 } from '../../ports/payment-gateway.service.port';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MockPaymentService implements PaymentGatewayServicePort {
-  async authorize(data: AuthorizeProps): Promise<AuthorizeResult> {
+  async createOrder(data: CreateOrderProps): Promise<CreateOrderResult> {
     // simulate payment failure
     if (data.amount > 100) {
       return {
@@ -20,7 +21,14 @@ export class MockPaymentService implements PaymentGatewayServicePort {
 
     return {
       success: true,
-      authorizationId: `mock-auth-${data.orderId}`,
+      paypalOrderId: `mock-paypal-order-${data.orderId}`,
+    };
+  }
+
+  async getAuthorizationId(orderId: string): Promise<AuthorizeResult> {
+    return {
+      success: true,
+      authorizationId: `mock-auth-${orderId}`,
     };
   }
 

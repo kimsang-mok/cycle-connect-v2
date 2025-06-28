@@ -16,11 +16,27 @@ export class PaymentRepository
     super(mapper, eventEmitter, new Logger(PaymentRepository.name));
   }
 
+  async findOneByBookingId(bookingId: string): Promise<PaymentEntity | null> {
+    const payment = await this.repository.findOne({
+      where: { bookingId },
+    });
+
+    return payment ? this.mapper.toDomain(payment) : null;
+  }
+
   async findOneByAuthorizationId(
     authorizationId: string,
   ): Promise<PaymentEntity | null> {
     const payment = await this.repository.findOne({
       where: { authorizationId },
+    });
+
+    return payment ? this.mapper.toDomain(payment) : null;
+  }
+
+  async findOneByOrderId(orderId: string): Promise<PaymentEntity | null> {
+    const payment = await this.repository.findOne({
+      where: { orderId },
     });
 
     return payment ? this.mapper.toDomain(payment) : null;

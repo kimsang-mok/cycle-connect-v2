@@ -12,16 +12,16 @@ import { BookingRepositoryPort } from '@src/modules/booking/database/ports/booki
 import { BOOKING_REPOSITORY } from '@src/modules/booking/booking.di-tokens';
 import { BookingNotFoundError } from '@src/modules/booking/booking.errors';
 import {
+  CannotCreateOrderError,
   InvalidPaymentAmountError,
-  PaymentAuthorizationFailedError,
 } from '../../payment.errors';
 
 export type InitiatePaymentResult =
-  | { success: true; id: string }
+  | { success: true; paypalOrderId: string }
   | {
       success: false;
-      id: string;
-      error: InstanceType<typeof PaymentAuthorizationFailedError>;
+      paypalOrderId: undefined;
+      error: InstanceType<typeof CannotCreateOrderError>;
     };
 
 @CommandHandler(InitiatePaymentCommand)
@@ -47,7 +47,18 @@ export class InitiatePaymentService
       throw new BookingNotFoundError();
     }
 
-    if (booking.getProps().totalPrice.unpack() !== command.amount) {
+    const existingPayment = await this.paymentRepo.findOneByBookingId(
+      booking.id,
+    );
+
+    if (existingPayment) {
+      return {
+        success: true,
+        paypalOrderId: existingPayment.getProps().orderId,
+      };
+    }
+
+    if (Number(booking.getProps().totalPrice.unpack()) !== command.amount) {
       throw new InvalidPaymentAmountError();
     }
 
@@ -56,25 +67,23 @@ export class InitiatePaymentService
       amount: new Price(command.amount),
     });
 
-    const result = await this.gateway.authorize({
-      orderId: command.orderId,
+    const result = await this.gateway.createOrder({
+      orderId: command.bookingId,
       amount: command.amount,
       method: command.method,
     });
 
-    if (result.success && result.authorizationId) {
-      payment.markAuthorized(result.authorizationId);
-    } else {
-      payment.markFailed(result.reason ?? 'Unexpected error');
+    if (result.success && result.paypalOrderId) {
+      payment.markPending(result.paypalOrderId);
+      await this.paymentRepo.insert(payment);
     }
 
-    await this.paymentRepo.insert(payment);
-    return result.success
-      ? { success: true, id: payment.id }
+    return result.paypalOrderId
+      ? { success: true, paypalOrderId: result.paypalOrderId }
       : {
           success: false,
-          id: payment.id,
-          error: new PaymentAuthorizationFailedError(),
+          paypalOrderId: undefined,
+          error: new CannotCreateOrderError(),
         };
   }
 }

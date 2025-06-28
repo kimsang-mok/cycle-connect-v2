@@ -3,12 +3,6 @@ import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { PaymentMethod } from '../../domain/payment.types';
 
 export class InitiatePaymentRequestDto {
-  @ApiProperty({
-    description: 'paymentMethodId for Stripe or orderId for Paypal',
-  })
-  @IsString()
-  orderId: string;
-
   @ApiProperty()
   @IsString()
   bookingId: string;

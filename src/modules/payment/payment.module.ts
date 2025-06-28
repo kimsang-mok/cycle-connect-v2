@@ -7,10 +7,22 @@ import { PaymentRepository } from './database/adapters/payment.repository';
 import { PaymentGatewayModule } from '@src/libs/payment-gateway/payment-gateway.module';
 import { PaymentMapper } from './payment.mapper';
 import { BookingModule } from '../booking/booking.module';
+import { AuthorizePaymentService } from './commands/authorize-payment/authorize-payment.service';
+import { AuthorizePaymentController } from './commands/authorize-payment/authorize-payment.controller';
+import { CaptureFundService } from './commands/capture-fund/capture-fund.service';
+import { CaptureFundController } from './commands/capture-fund/capture-fund.controller';
 
-const controllers = [InitiatePaymentController];
+const controllers = [
+  InitiatePaymentController,
+  AuthorizePaymentController,
+  CaptureFundController,
+];
 
-const commandHandlers: Provider[] = [InitiatePaymentService];
+const commandHandlers: Provider[] = [
+  InitiatePaymentService,
+  AuthorizePaymentService,
+  CaptureFundService,
+];
 
 const repositories: Provider[] = [
   {

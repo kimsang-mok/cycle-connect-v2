@@ -16,7 +16,7 @@ export class PaymentGatewayModule {
       providers: [
         {
           provide: PAYMENT_GATEWAY,
-          inject: [ConfigService, MockPaymentService],
+          inject: [ConfigService, MockPaymentService, PaypalPaymentService],
           useFactory: (
             configService: ConfigService<AllConfigType>,
             mock: MockPaymentService,
@@ -25,6 +25,7 @@ export class PaymentGatewayModule {
             const provider = configService.get('payment.gateway', {
               infer: true,
             });
+
             switch (provider) {
               case 'paypal':
                 return paypal;

@@ -24,3 +24,27 @@ export const CannotCaptureUnAuthorizedPaymentError = defineDomainError({
   code: 'PAYMENT.CANNOT_CAPTURE_UNAUTHORIZED',
   status: HttpStatus.CONFLICT,
 });
+
+export const CannotCreateOrderError = defineDomainError({
+  message: 'Cannot create an order',
+  code: 'PAYMENT.CANNOT_CREATE_ORDER',
+  status: HttpStatus.BAD_REQUEST,
+});
+
+export const CannotChargeUnconfirmedBookingError = defineDomainError({
+  message: 'Cannot charge an unconfirmed booking',
+  code: 'PAYMENT.CANNOT_CHARGE_UNCONFIRMED_BOOKING',
+  status: HttpStatus.BAD_REQUEST,
+});
+
+export const CannotCaptureFundError = defineDomainError({
+  message: 'Cannot capture fund',
+  code: 'PAYMENT.CANNOT_CAPTURE_FUND',
+  status: HttpStatus.BAD_REQUEST,
+});
+
+export const InvalidStateTransitionError = defineDomainError({
+  message: 'State transition is invalid',
+  code: 'PAYMEENT.INVALID_STATE_TRANSITION',
+  status: HttpStatus.BAD_REQUEST,
+});
