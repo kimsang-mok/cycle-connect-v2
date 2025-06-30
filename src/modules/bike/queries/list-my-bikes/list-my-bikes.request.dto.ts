@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BikeTypes } from '../../domain/bike.types';
+import { PaginatedQueryRequestDto } from '@src/libs/api';
+import { Type } from 'class-transformer';
 
-export class ListMyBikesRequestDto {
+export class ListMyBikesRequestDto extends PaginatedQueryRequestDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
@@ -17,6 +19,7 @@ export class ListMyBikesRequestDto {
     example: 125,
   })
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   readonly enginePower?: number;
 
@@ -24,6 +27,7 @@ export class ListMyBikesRequestDto {
     description: 'Lowest rental price',
   })
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   readonly minPrice?: number;
 
@@ -31,6 +35,7 @@ export class ListMyBikesRequestDto {
     description: 'Highest rental price',
   })
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   readonly maxPrice?: number;
 }
