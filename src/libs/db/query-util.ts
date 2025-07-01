@@ -106,6 +106,10 @@ export class QueryUtil<T extends ObjectLiteral> {
     return this;
   }
 
+  async executeRaw(): Promise<T[]> {
+    return this.qb.getMany();
+  }
+
   async execute(): Promise<Paginated<T>> {
     const [data, total] = await this.qb.getManyAndCount();
     const limit = this.qb.expressionMap.take ?? 0;

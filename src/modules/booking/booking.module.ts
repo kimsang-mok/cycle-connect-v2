@@ -9,14 +9,20 @@ import { BikeModule } from '../bike/bike.module';
 import { BookingAvailabilityService } from './domain/services/booking-availability.service';
 import { BookingPricingService } from './domain/services/booking-pricing.sevice';
 import { MarkBookingAsConfirmedWhenPaymentIsAuthorizedDomainEventHandler } from './event-handlers/mark-booking-as-confirmed-when-payment-is-authorized.domain-event-handler';
+import { GetActiveBookingsBikeBikeIdController } from './queries/get-active-bookings-by-bike-id/get-active-bookings-by-bike-id.controller';
+import { GetActiveBookingsBikeBikeIdQueryHandler } from './queries/get-active-bookings-by-bike-id/get-active-bookings-by-bike-id.query-handler';
 
-const controllers = [CreateBookingController];
+const controllers = [
+  CreateBookingController,
+  GetActiveBookingsBikeBikeIdController,
+];
 
 const commandHandlers: Provider[] = [CreateBookingService];
 
 const services: Provider[] = [
   BookingAvailabilityService,
   BookingPricingService,
+  GetActiveBookingsBikeBikeIdQueryHandler,
 ];
 
 const eventHandlers: Provider[] = [

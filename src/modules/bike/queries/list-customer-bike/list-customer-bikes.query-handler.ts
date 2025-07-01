@@ -9,6 +9,7 @@ import {
 } from '@src/libs/db';
 import { Paginated } from '@src/libs/ddd';
 import { ListCustomerBikesQuery } from './list-customer-bikes.query';
+import { BookingStatus } from '@src/modules/booking/domain/booking.types';
 
 @QueryHandler(ListCustomerBikesQuery)
 export class ListCustomerBikesQueryHandler
@@ -25,6 +26,29 @@ export class ListCustomerBikesQueryHandler
     );
 
     const result = await queryUtil
+      .custom((qb) => {
+        if (query.rentalStart && query.rentalEnd) {
+          qb.andWhere((qb) => {
+            const subQuery = qb
+              .subQuery()
+              .select('1')
+              .from('bookings', 'booking')
+              .where('booking.bike_id = entity.id')
+              .andWhere('booking.status = :status', {
+                status: BookingStatus.confirmed,
+              })
+              .andWhere('booking.start_date <= :rentalEnd', {
+                rentalEnd: query.rentalEnd,
+              })
+              .andWhere('booking.end_date >= :rentalStart', {
+                rentalStart: query.rentalStart,
+              })
+              .getQuery();
+
+            return `NOT EXISTS ${subQuery}`;
+          });
+        }
+      })
       .search(new PrecomputedFullTextSearchStrategy(), query.searchTerm)
       .filter({
         field: 'isActive',

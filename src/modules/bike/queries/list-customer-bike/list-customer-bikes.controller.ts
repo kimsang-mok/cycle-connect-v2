@@ -1,7 +1,6 @@
-import { Body, Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { routesV1 } from '@src/configs/app.routes';
-import { PaginatedQueryRequestDto } from '@src/libs/api';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BikePaginatedResponseDto } from '../../dtos/bike.paginated.response.dto';
 import { BikeMapper } from '../../bike.mapper';
@@ -27,12 +26,9 @@ export class ListCustomerBikesController {
     status: HttpStatus.OK,
     type: BikePaginatedResponseDto,
   })
-  async list(
-    @Body() body: ListCustomerBikesRequestDto,
-    @Query() queryParams: PaginatedQueryRequestDto,
-  ) {
+  async list(@Query() queryParams: ListCustomerBikesRequestDto) {
     const query = new ListCustomerBikesQuery({
-      ...body,
+      ...queryParams,
       limit: queryParams?.limit,
       page: queryParams?.page,
     });

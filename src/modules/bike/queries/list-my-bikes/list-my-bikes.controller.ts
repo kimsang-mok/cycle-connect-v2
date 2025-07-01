@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpStatus,
@@ -15,7 +14,6 @@ import { Roles } from '@src/modules/auth/roles.decorator';
 import { UserRoles } from '@src/modules/user/domain/user.types';
 import { ListMyBikesRequestDto } from './list-my-bikes.request.dto';
 import { ListMyBikesQuery } from './list-my-bikes.query';
-import { PaginatedQueryRequestDto } from '@src/libs/api';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -46,16 +44,10 @@ export class ListMyBikesController {
     type: BikePaginatedResponseDto,
   })
   @ApiBearerAuth()
-  async list(
-    @Body() body: ListMyBikesRequestDto,
-    @Query() queryParams: PaginatedQueryRequestDto,
-    @Request() request,
-  ) {
+  async list(@Query() queryParams: ListMyBikesRequestDto, @Request() request) {
     const query = new ListMyBikesQuery({
-      ...body,
+      ...queryParams,
       ownerId: request.user.id,
-      limit: queryParams?.limit,
-      page: queryParams?.page,
     });
 
     const result: Paginated<BikeOrmEntity> = await this.queryBus.execute(query);

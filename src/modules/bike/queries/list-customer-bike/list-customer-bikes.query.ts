@@ -12,7 +12,9 @@ export class ListCustomerBikesQuery extends PaginatedQueryBase {
 
   readonly maxPrice?: number;
 
-  // readonly ownerId: string;
+  readonly rentalStart: Date;
+
+  readonly rentalEnd: Date;
 
   constructor(props: PaginatedParams<ListCustomerBikesQuery>) {
     super(props);
@@ -21,5 +23,7 @@ export class ListCustomerBikesQuery extends PaginatedQueryBase {
     this.enginePower = props.enginePower;
     this.minPrice = props.minPrice;
     this.maxPrice = props.maxPrice;
+    this.rentalStart = props.rentalStart;
+    this.rentalEnd = props.rentalEnd;
   }
 }
