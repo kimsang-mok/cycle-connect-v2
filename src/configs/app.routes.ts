@@ -46,6 +46,7 @@ export const routesV1 = {
     root: bookingRoot,
     myBooking: `${bookingRoot}/me`,
     renterBookings: `${bookingRoot}/renter`,
+    byBike: `${bookingRoot}/bike/:bikeId`,
   },
 
   payment: {
