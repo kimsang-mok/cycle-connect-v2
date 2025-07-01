@@ -8,6 +8,9 @@ export class S3FileUrlResolverService implements FileUrlResolverServicePort {
   constructor(private readonly configService: ConfigService<AllConfigType>) {}
 
   resolveUrl(key: string): string {
-    return `https://${this.configService.getOrThrow('file.awsDefaultS3Bucket', { infer: true })}.s3.${this.configService.getOrThrow('file.awsS3Region', { infer: true })}.amazonaws.com/${key}`;
+    if (key) {
+      return `https://${this.configService.getOrThrow('file.awsDefaultS3Bucket', { infer: true })}.s3.${this.configService.getOrThrow('file.awsS3Region', { infer: true })}.amazonaws.com/${key}`;
+    }
+    return '';
   }
 }
