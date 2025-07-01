@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { BikeTypes } from '../../domain/bike.types';
 import { PaginatedQueryRequestDto } from '@src/libs/api';
 import { Type } from 'class-transformer';
@@ -38,4 +44,20 @@ export class ListCustomerBikesRequestDto extends PaginatedQueryRequestDto {
   @Type(() => Number)
   @IsNumber()
   readonly maxPrice?: number;
+
+  @ApiProperty({
+    description: "Rental's start date",
+    type: String,
+  })
+  @Type(() => Date)
+  @IsDate()
+  readonly rentalStart: Date;
+
+  @ApiProperty({
+    description: "Rental's end date",
+    type: String,
+  })
+  @Type(() => Date)
+  @IsDate()
+  readonly rentalEnd: Date;
 }
