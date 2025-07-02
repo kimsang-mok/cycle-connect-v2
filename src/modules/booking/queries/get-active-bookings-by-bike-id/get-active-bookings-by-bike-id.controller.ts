@@ -1,12 +1,13 @@
-import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 
 import { GetActiveBookingsByBikeIdQuery } from './get-active-bookings-by-bike-id.query';
 import { routesV1 } from '@src/configs/app.routes';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
 import { BookingMapper } from '../../booking.mapper';
 import { BookingOrmEntity } from '../../database/booking.orm-entity';
-import { GetActiveBookingsByBikeIdResponseDto } from './get-active-bookings-by-bike-id.response.dto';
+import { ApiOkListResponse } from '@src/libs/api/decorators/api-ok-list-response.decorator';
+import { BookingResponseDto } from '../../dtos/booking.response.dto';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.booking.tag)
@@ -20,10 +21,7 @@ export class GetActiveBookingsBikeBikeIdController {
   @ApiOperation({
     summary: 'Retrieve all active bookings by bike id for the current month',
   })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: GetActiveBookingsByBikeIdResponseDto,
-  })
+  @ApiOkListResponse(BookingResponseDto)
   async get(@Param('bikeId') bikeId: string) {
     const query = new GetActiveBookingsByBikeIdQuery({ bikeId });
 

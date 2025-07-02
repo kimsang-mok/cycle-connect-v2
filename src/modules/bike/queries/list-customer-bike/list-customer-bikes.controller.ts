@@ -1,14 +1,15 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { routesV1 } from '@src/configs/app.routes';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BikePaginatedResponseDto } from '../../dtos/bike.paginated.response.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BikeMapper } from '../../bike.mapper';
 import { Paginated } from '@src/libs/ddd';
 import { ListCustomerBikesQuery } from './list-customer-bikes.query';
 import { ListCustomerBikesRequestDto } from './list-customer-bikes.request.dto';
 
 import { BikeOrmEntity } from '../../database/bike.orm-entity';
+import { ApiOkPaginatedResponse } from '@src/libs/api/decorators';
+import { BikeResponseDto } from '../../dtos/bike.response.dto';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.bike.tag)
@@ -22,10 +23,7 @@ export class ListCustomerBikesController {
   @ApiOperation({
     summary: 'Find available bikes for customer',
   })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: BikePaginatedResponseDto,
-  })
+  @ApiOkPaginatedResponse(BikeResponseDto)
   async list(@Query() queryParams: ListCustomerBikesRequestDto) {
     const query = new ListCustomerBikesQuery({
       ...queryParams,

@@ -12,6 +12,7 @@ export async function createTestUser(
     password: string;
     role: UserRoles;
     verificationStatus: VerificationStatus;
+    verificationToken: string;
   }>,
 ) {
   const queryRunner = dataSource.createQueryRunner();
@@ -25,6 +26,9 @@ export async function createTestUser(
   const role = overrides?.role ?? UserRoles.customer;
   const verificationStatus =
     overrides?.verificationStatus ?? VerificationStatus.verified;
+  const verificationToken =
+    overrides?.verificationStatus ??
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30';
 
   await queryRunner.query(
     `INSERT INTO users(id, email, first_name, last_name, password, role, created_at, updated_at)
@@ -33,9 +37,9 @@ export async function createTestUser(
   );
 
   await queryRunner.query(
-    `INSERT INTO user_verifications(id, user_id, status, created_at)
-     VALUES (gen_random_uuid(), $1, $2, now())`,
-    [id, verificationStatus],
+    `INSERT INTO user_verifications(id, user_id, status, token, created_at)
+     VALUES (gen_random_uuid(), $1, $2, $3, now())`,
+    [id, verificationStatus, verificationToken],
   );
 
   await queryRunner.release();

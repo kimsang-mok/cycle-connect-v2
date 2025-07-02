@@ -1,0 +1,3 @@
+export const PROVINCE_REPOSITORY = Symbol.for('PROVINCE_REPOSITORY');
+
+export const DISTRICT_REPOSITORY = Symbol.for('DISTRICT_REPOSITORY');

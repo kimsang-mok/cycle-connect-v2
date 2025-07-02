@@ -11,6 +11,7 @@ const bikeRoot = 'bikes';
 const bookingRoot = 'bookings';
 const paymentRoot = 'payments';
 const uploadRoot = 'uploads';
+const locationRoot = 'locations';
 
 // Api Versions
 const v1 = 'v1';
@@ -60,5 +61,12 @@ export const routesV1 = {
   upload: {
     tag: 'Upload',
     presign: `${uploadRoot}/presign`,
+  },
+
+  location: {
+    tag: 'Location',
+    root: locationRoot,
+    provinces: `${locationRoot}/provinces`,
+    districts: `${locationRoot}/districts`,
   },
 };

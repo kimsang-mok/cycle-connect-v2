@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  Query,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { routesV1 } from '@src/configs/app.routes';
 import { JwtAuthGuard } from '@src/modules/auth/libs/guard/jwt-auth-guard';
@@ -14,16 +7,12 @@ import { Roles } from '@src/modules/auth/roles.decorator';
 import { UserRoles } from '@src/modules/user/domain/user.types';
 import { ListMyBikesRequestDto } from './list-my-bikes.request.dto';
 import { ListMyBikesQuery } from './list-my-bikes.query';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { BikePaginatedResponseDto } from '../../dtos/bike.paginated.response.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BikeMapper } from '../../bike.mapper';
 import { Paginated } from '@src/libs/ddd';
 import { BikeOrmEntity } from '../../database/bike.orm-entity';
+import { ApiOkPaginatedResponse } from '@src/libs/api/decorators';
+import { BikeResponseDto } from '../../dtos/bike.response.dto';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.bike.tag)
@@ -39,10 +28,7 @@ export class ListMyBikesController {
   @ApiOperation({
     summary: "Find renter's bikes",
   })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: BikePaginatedResponseDto,
-  })
+  @ApiOkPaginatedResponse(BikeResponseDto)
   @ApiBearerAuth()
   async list(@Query() queryParams: ListMyBikesRequestDto, @Request() request) {
     const query = new ListMyBikesQuery({

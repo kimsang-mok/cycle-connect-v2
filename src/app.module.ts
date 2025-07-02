@@ -29,6 +29,10 @@ import paymentGatewayConfig from './libs/payment-gateway/config/payment-gateway.
 import { PaymentModule } from './modules/payment/payment.module';
 import fileConfig from './libs/uploader/config/file.config';
 import { FileModule } from './modules/file/file.module';
+import { LocationModule } from './modules/location/location.module';
+import cacheConfig from './libs/cache/cache.config';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CacheConfigService } from './libs/cache/cache-config.service';
 
 const interceptors: Provider[] = [
   {
@@ -63,6 +67,7 @@ const filters: Provider[] = [
         mailerConfig,
         paymentGatewayConfig,
         fileConfig,
+        cacheConfig,
       ],
       envFilePath: getEnvFilePath(),
     }),
@@ -72,6 +77,10 @@ const filters: Provider[] = [
       dataSourceFactory: async (options: DataSourceOptions) => {
         return new DataSource(options).initialize();
       },
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useClass: CacheConfigService,
     }),
     CqrsModule,
 
@@ -83,6 +92,7 @@ const filters: Provider[] = [
     BookingModule,
     PaymentModule,
     FileModule,
+    LocationModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],
