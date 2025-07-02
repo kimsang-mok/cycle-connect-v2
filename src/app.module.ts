@@ -29,6 +29,7 @@ import paymentGatewayConfig from './libs/payment-gateway/config/payment-gateway.
 import { PaymentModule } from './modules/payment/payment.module';
 import fileConfig from './libs/uploader/config/file.config';
 import { FileModule } from './modules/file/file.module';
+import { LocationModule } from './modules/location/location.module';
 
 const interceptors: Provider[] = [
   {
@@ -83,6 +84,7 @@ const filters: Provider[] = [
     BookingModule,
     PaymentModule,
     FileModule,
+    LocationModule,
   ],
   controllers: [],
   providers: [AppRequestContext, ...filters, ...interceptors],
