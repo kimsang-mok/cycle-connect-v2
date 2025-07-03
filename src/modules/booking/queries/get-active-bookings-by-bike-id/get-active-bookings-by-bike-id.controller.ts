@@ -25,8 +25,6 @@ export class GetActiveBookingsBikeBikeIdController {
   async get(@Param('bikeId') bikeId: string) {
     const query = new GetActiveBookingsByBikeIdQuery({ bikeId });
 
-    console.log('Bike Id: ', bikeId);
-
     const records: BookingOrmEntity[] = await this.queryBus.execute(query);
 
     return {

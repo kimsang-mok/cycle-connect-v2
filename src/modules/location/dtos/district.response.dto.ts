@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ResponseBase } from '@src/libs/api';
 
-export class DistrictResponseDto extends ResponseBase {
+export class DistrictResponseDto {
   @ApiProperty({
     description: "District's code",
     example: 1204,
