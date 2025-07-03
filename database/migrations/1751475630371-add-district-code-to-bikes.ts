@@ -7,11 +7,22 @@ export class AddDistrictCodeToBikes1751475630371 implements MigrationInterface {
       ADD COLUMN "district_code" INT;    
     `);
 
-    await queryRunner.query(`
-      UPDATE "bikes"
-      SET "district_code" = 1204
-      WHERE "district_code" IS NULL;    
+    const bikes = await queryRunner.query(`
+      SELECT id FROM "bikes" WHERE "district_code" IS NULL;
     `);
+
+    const districtCodes = [1702, 1710, 707, 708, 1201, 1204];
+
+    // randomly assign district_code for each bike
+    for (const bike of bikes) {
+      const randomCode =
+        districtCodes[Math.floor(Math.random() * districtCodes.length)];
+      await queryRunner.query(
+        `UPDATE "bikes" 
+        SET "district_code" = $1 WHERE "id" = $2;`,
+        [randomCode, bike.id],
+      );
+    }
 
     await queryRunner.query(`
       ALTER TABLE "bikes"
