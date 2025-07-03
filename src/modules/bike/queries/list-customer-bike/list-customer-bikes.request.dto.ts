@@ -1,10 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDate,
+  IsDefined,
   IsEnum,
   IsNumber,
   IsOptional,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 import { BikeTypes } from '../../domain/bike.types';
 import { PaginatedQueryRequestDto } from '@src/libs/api';
@@ -60,4 +62,22 @@ export class ListCustomerBikesRequestDto extends PaginatedQueryRequestDto {
   @Type(() => Date)
   @IsDate()
   readonly rentalEnd: Date;
+
+  @ApiProperty({ description: "Province's code" })
+  @ValidateIf((o) => !o.districtCode)
+  @IsDefined({
+    message: 'Either provinceCode or districtCode must be provided.',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  readonly provinceCode: number;
+
+  @ApiProperty({ description: "District's code" })
+  @ValidateIf((o) => !o.provinceCode)
+  @IsDefined({
+    message: 'Either provinceCode or districtCode must be provided.',
+  })
+  @Type(() => Number)
+  @IsNumber()
+  readonly districtCode: number;
 }

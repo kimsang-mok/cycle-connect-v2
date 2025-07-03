@@ -3,6 +3,7 @@ import {
   randomBikeDescription,
   randomBikeModel,
   randomBikeType,
+  randomDistrictCode,
   randomEnginePower,
   randomPricePerDay,
 } from './bike.faker.util';
@@ -18,6 +19,7 @@ interface BikeSeedProps {
   isActive?: boolean;
   photoKeys?: string[];
   thumbnailKey?: string;
+  districtCode?: number;
 }
 
 export function createBikeSeed(props: BikeSeedProps): BikeOrmEntity {
@@ -33,6 +35,7 @@ export function createBikeSeed(props: BikeSeedProps): BikeOrmEntity {
   bike.isActive = props.isActive ?? true;
   bike.photoKeys = props.photoKeys ?? [];
   bike.thumbnailKey = props.thumbnailKey ?? '';
+  bike.districtCode = props.districtCode ?? randomDistrictCode();
   bike.createdAt = new Date();
   bike.updatedAt = new Date();
 

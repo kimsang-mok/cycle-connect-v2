@@ -24,3 +24,7 @@ export function randomPricePerDay(): number {
 export function randomBikeDescription(): string {
   return faker.lorem.sentence();
 }
+
+export function randomDistrictCode(): number {
+  return faker.helpers.arrayElement([1702, 1710, 707, 708, 1201, 1204]);
+}

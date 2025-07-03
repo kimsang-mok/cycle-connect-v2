@@ -27,6 +27,20 @@ export class ListCustomerBikesQueryHandler
 
     const result = await queryUtil
       .custom((qb) => {
+        if (query.districtCode) {
+          qb.andWhere('entity.district_code = :districtCode', {
+            districtCode: query.districtCode,
+          });
+        } else if (query.provinceCode) {
+          qb.innerJoin(
+            'districts',
+            'd',
+            'd.code = entity.district_code',
+          ).andWhere('d.province_code = :provinceCode', {
+            provinceCode: query.provinceCode,
+          });
+        }
+
         if (query.rentalStart && query.rentalEnd) {
           qb.andWhere((qb) => {
             const subQuery = qb

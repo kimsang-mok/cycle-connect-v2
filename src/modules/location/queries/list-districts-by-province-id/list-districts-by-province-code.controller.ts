@@ -22,7 +22,7 @@ export class ListDistrictsByProvinceCodeController {
 
   @Get(routesV1.location.districts)
   @ApiOperation({
-    summary: 'List districts by provinceId',
+    summary: "List districts by province's code",
   })
   @ApiOkListResponse(DistrictResponseDto)
   async list(@Query() queryParams: ListDistrictsByProvinceCodeRequestDto) {
