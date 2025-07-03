@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { ListDistrictsByProvinceIdRequestDto } from './list-districts-by-province-id.request.dto';
-import { ListDistrictsByProvinceIdQuery } from './list-districts-by-province-id.query';
+import { ListDistrictsByProvinceCodeRequestDto } from './list-districts-by-province-code.request.dto';
+import { ListDistrictsByProvinceCodeQuery } from './list-districts-by-province-code.query';
 import { DistrictOrmEntity } from '../../database/district.orm-entity';
 import { DistrictMapper } from '../../district.mapper';
 import { routesV1 } from '@src/configs/app.routes';
@@ -13,7 +13,7 @@ import { Cache } from 'cache-manager';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.location.tag)
-export class ListDistrictsByProvinceIdController {
+export class ListDistrictsByProvinceCodeController {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly districtMapper: DistrictMapper,
@@ -25,16 +25,16 @@ export class ListDistrictsByProvinceIdController {
     summary: 'List districts by provinceId',
   })
   @ApiOkListResponse(DistrictResponseDto)
-  async list(@Query() queryParams: ListDistrictsByProvinceIdRequestDto) {
-    const cacheKey = `location:districts:province:${queryParams.provinceId}`;
+  async list(@Query() queryParams: ListDistrictsByProvinceCodeRequestDto) {
+    const cacheKey = `location:districts:province:${queryParams.provinceCode}`;
     const cached = await this.cacheManager.get<DistrictResponseDto[]>(cacheKey);
 
     if (cached) {
       return { data: cached };
     }
 
-    const query = new ListDistrictsByProvinceIdQuery({
-      provinceId: queryParams.provinceId,
+    const query = new ListDistrictsByProvinceCodeQuery({
+      provinceCode: queryParams.provinceCode,
     });
 
     const districts: DistrictOrmEntity[] = await this.queryBus.execute(query);

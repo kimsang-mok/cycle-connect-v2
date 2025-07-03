@@ -7,7 +7,7 @@ export class DistrictMapper {
     response.code = entity.code;
     response.nameKm = entity.nameKm;
     response.nameEn = entity.nameEn;
-    response.provinceId = entity.provinceId;
+    response.provinceCode = entity.provinceCode;
     return response;
   }
 }

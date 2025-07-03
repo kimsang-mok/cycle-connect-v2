@@ -10,13 +10,13 @@ export class CreateDistrictTable1751452575675 implements MigrationInterface {
         "code" INT NOT NULL UNIQUE,
         "name_km" VARCHAR(255) NOT NULL,
         "name_en" VARCHAR(255) NOT NULL,
-        "province_id" INT NOT NULL,
-        CONSTRAINT "FK_districts_province_id" FOREIGN KEY ("province_id") REFERENCES "provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE
+        "province_code" INT NOT NULL,
+        CONSTRAINT "FK_districts_province_code" FOREIGN KEY ("province_code") REFERENCES "provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE
       );
     `);
 
     await queryRunner.query(`
-      INSERT INTO "districts" ("code", "name_km", "name_en", "province_id")
+      INSERT INTO "districts" ("code", "name_km", "name_en", "province_code")
       VALUES
         (102, 'មង្គលបូរី', 'Mongkol Borei', 1),
         (103, 'ភ្នំស្រុក', 'Phnum Srok', 1),

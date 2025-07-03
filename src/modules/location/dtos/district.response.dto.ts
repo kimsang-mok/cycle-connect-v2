@@ -18,5 +18,5 @@ export class DistrictResponseDto extends ResponseBase {
   nameEn: string;
 
   @ApiProperty({ description: "Province's code", example: 12 })
-  provinceId: number;
+  provinceCode: number;
 }
