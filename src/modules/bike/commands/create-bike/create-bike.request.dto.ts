@@ -8,6 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 import { BikeTypes } from '../../domain/bike.types';
+import { Type } from 'class-transformer';
 
 export class CreateBikeRequestDto {
   @ApiProperty({ enum: BikeTypes, example: BikeTypes.motorbike })
@@ -50,4 +51,12 @@ export class CreateBikeRequestDto {
   @IsOptional()
   @IsString()
   thumbnailKey?: string;
+
+  @ApiProperty({
+    example: 1204,
+    description: "District's code",
+  })
+  @Type(() => Number)
+  @IsNumber()
+  districtCode: number;
 }

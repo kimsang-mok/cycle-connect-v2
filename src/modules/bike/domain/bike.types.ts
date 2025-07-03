@@ -10,6 +10,7 @@ export interface BikeProps {
   isActive: boolean;
   photoKeys: string[];
   thumbnailKey: string;
+  districtCode: number;
 }
 
 export interface CreateBikeProps {
@@ -21,6 +22,7 @@ export interface CreateBikeProps {
   description: string;
   photoKeys: string[];
   thumbnailKey?: string;
+  districtCode: number;
 }
 
 export enum BikeTypes {

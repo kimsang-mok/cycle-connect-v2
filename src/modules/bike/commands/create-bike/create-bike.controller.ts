@@ -36,7 +36,6 @@ export class CreateBikeController {
     const command = new CreateBikeCommand({
       ...body,
       ownerId: request.user.id,
-      pricePerDay: body.pricePerDay,
     });
 
     const result: AggregateId = await this.commandBus.execute(command);

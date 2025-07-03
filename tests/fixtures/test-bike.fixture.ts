@@ -14,6 +14,7 @@ export async function createTestBike(
     isActive: boolean;
     photoKeys: string[];
     thumbnailKey: string;
+    districtCode: number;
   }>,
 ) {
   const queryRunner = dataSource.createQueryRunner();
@@ -30,16 +31,17 @@ export async function createTestBike(
   const isActive = overrides?.isActive ?? true;
   const photoKeys = overrides?.photoKeys ?? ['photo1.jpg', 'photo2.jpg'];
   const thumbnailKey = overrides?.thumbnailKey ?? 'photo1.jpg';
+  const districtCode = overrides?.districtCode ?? 1204;
 
   await queryRunner.query(
     `INSERT INTO bikes(
       id, owner_id, type, model, engine_power, price_per_day,
-      description, is_active, photo_keys, thumbnail_key,
+      description, is_active, photo_keys, thumbnail_key, district_code,
       created_at, updated_at
     )
     VALUES (
       $1, $2, $3, $4, $5, $6,
-      $7, $8, $9, $10,
+      $7, $8, $9, $10, $11
       now(), now()
     )`,
     [
@@ -53,6 +55,7 @@ export async function createTestBike(
       isActive,
       photoKeys,
       thumbnailKey,
+      districtCode,
     ],
   );
 

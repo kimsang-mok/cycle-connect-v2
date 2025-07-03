@@ -31,6 +31,7 @@ export class BikeMapper
     orm.isActive = copy.isActive;
     orm.photoKeys = copy.photoKeys;
     orm.thumbnailKey = copy.thumbnailKey;
+    orm.districtCode = copy.districtCode;
 
     return orm;
   }
@@ -50,6 +51,7 @@ export class BikeMapper
         isActive: record.isActive,
         photoKeys: record.photoKeys,
         thumbnailKey: record.thumbnailKey,
+        districtCode: record.districtCode,
       },
     });
     return entity;
@@ -69,6 +71,7 @@ export class BikeMapper
       this.fileUrlResolver.resolveUrl(key),
     );
     response.thumbnailUrl = this.fileUrlResolver.resolveUrl(props.thumbnailKey);
+    response.districtCode = props.districtCode;
     return response;
   }
 }
