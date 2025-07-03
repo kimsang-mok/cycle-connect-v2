@@ -20,6 +20,7 @@ describe('CreateBikeService', () => {
     pricePerDay: 12.5,
     photoKeys: ['uploads/user-123/photo1.jpg'],
     thumbnailKey: 'uploads/user-123/photo1.jpg',
+    districtCode: 1204,
   };
 
   beforeEach(async () => {

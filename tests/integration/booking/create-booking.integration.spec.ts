@@ -51,8 +51,6 @@ describe('BookingModule - Create Booking Scenarios', () => {
       ownerId: renterId,
     });
 
-    console.log('Bike ID: ', bikeId);
-
     const response = await request(app.getHttpServer())
       .post(endpoint)
       .send({ ...createBookingDto, bikeId: bikeId })

@@ -7,16 +7,17 @@ export class CreateDistrictTable1751452575675 implements MigrationInterface {
         "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
         "updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
-        "code" INT NOT NULL UNIQUE,
+        "code" INT NOT NULL,
         "name_km" VARCHAR(255) NOT NULL,
         "name_en" VARCHAR(255) NOT NULL,
-        "province_id" INT NOT NULL,
-        CONSTRAINT "FK_districts_province_id" FOREIGN KEY ("province_id") REFERENCES "provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE
+        "province_code" INT NOT NULL,
+        CONSTRAINT "UQ_districts_code" UNIQUE ("code"),
+        CONSTRAINT "FK_districts_province_code" FOREIGN KEY ("province_code") REFERENCES "provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE
       );
     `);
 
     await queryRunner.query(`
-      INSERT INTO "districts" ("code", "name_km", "name_en", "province_id")
+      INSERT INTO "districts" ("code", "name_km", "name_en", "province_code")
       VALUES
         (102, 'មង្គលបូរី', 'Mongkol Borei', 1),
         (103, 'ភ្នំស្រុក', 'Phnum Srok', 1),

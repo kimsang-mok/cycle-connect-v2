@@ -8,9 +8,10 @@ export class CreateProvinceTable1751446888837 implements MigrationInterface {
         "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
         "updated_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
         "type" VARCHAR(255) NOT NULL,
-        "code" INT NOT NULL UNIQUE,
+        "code" INT NOT NULL,
         "name_km" VARCHAR(255) NOT NULL,
-        "name_en" VARCHAR(255) NOT NULL
+        "name_en" VARCHAR(255) NOT NULL,
+        CONSTRAINT "UQ_provinces_code" UNIQUE ("code")
       );   
     `);
 

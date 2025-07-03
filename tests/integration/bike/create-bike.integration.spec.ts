@@ -23,6 +23,7 @@ describe('BikeModule - Create Bike Scenarios', () => {
     pricePerDay: 12.5,
     photoKeys: ['uploads/test-user/photo1.jpg'],
     thumbnailKey: 'uploads/test-user/photo1.jpg',
+    districtCode: 1204,
   };
 
   beforeAll(async () => {

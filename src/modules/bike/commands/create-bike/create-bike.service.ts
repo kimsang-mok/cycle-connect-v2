@@ -27,6 +27,7 @@ export class CreateBikeService
       pricePerDay: new Price(command.pricePerDay),
       photoKeys: command.photoKeys,
       thumbnailKey: command.thumbnailKey,
+      districtCode: command.districtCode,
     });
 
     try {

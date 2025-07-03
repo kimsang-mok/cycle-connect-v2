@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber } from 'class-validator';
 
-export class ListDistrictsByProvinceIdRequestDto {
+export class ListDistrictsByProvinceCodeRequestDto {
   @ApiProperty()
   @Type(() => Number)
   @IsNumber()
-  provinceId: number;
+  provinceCode: number;
 }

@@ -5,7 +5,7 @@ import { ProvinceResponseDto } from './dtos/province.response.dto';
 @Injectable()
 export class ProvinceMapper {
   toResponse(entity: ProvinceOrmEntity): ProvinceResponseDto {
-    const response = new ProvinceResponseDto(entity);
+    const response = new ProvinceResponseDto();
     response.code = entity.code;
     response.nameKm = entity.nameKm;
     response.nameEn = entity.nameEn;

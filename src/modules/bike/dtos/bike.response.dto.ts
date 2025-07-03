@@ -46,4 +46,9 @@ export class BikeResponseDto extends ResponseBase {
     description: 'Full S3 URLs to bike images',
   })
   photoUrls: string[];
+
+  @ApiProperty({
+    example: 1204,
+  })
+  districtCode: number;
 }

@@ -7,17 +7,17 @@ import { ProvinceRepository } from './database/adapters/province.repository';
 import { ProvinceMapper } from './province.mapper';
 import { DistrictMapper } from './district.mapper';
 import { DistrictRepository } from './database/adapters/district.repository';
-import { ListDistrictsByProvinceIdController } from './queries/list-districts-by-province-id/list-districts-by-province-id.controller';
-import { ListDistrictsByProvinceIdQueryHandler } from './queries/list-districts-by-province-id/list-districts-by-province-id.query-handler';
+import { ListDistrictsByProvinceCodeController } from './queries/list-districts-by-province-id/list-districts-by-province-code.controller';
+import { ListDistrictsByProvinceCodeQueryHandler } from './queries/list-districts-by-province-id/list-districts-by-province-code.query-handler';
 
 const controllers = [
   ListAllProvincesController,
-  ListDistrictsByProvinceIdController,
+  ListDistrictsByProvinceCodeController,
 ];
 
 const queryHandlers: Provider[] = [
   ListAllProvincesQueryHandler,
-  ListDistrictsByProvinceIdQueryHandler,
+  ListDistrictsByProvinceCodeQueryHandler,
 ];
 
 const repositories: Provider[] = [

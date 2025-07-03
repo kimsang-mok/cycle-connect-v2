@@ -18,6 +18,8 @@ export class CreateBikeCommand extends Command {
 
   readonly thumbnailKey?: string;
 
+  readonly districtCode: number;
+
   constructor(props: CommandProps<CreateBikeCommand>) {
     super(props);
     this.ownerId = props.ownerId;
@@ -28,5 +30,6 @@ export class CreateBikeCommand extends Command {
     this.description = props.description;
     this.photoKeys = props.photoKeys;
     this.thumbnailKey = props.thumbnailKey;
+    this.districtCode = props.districtCode;
   }
 }

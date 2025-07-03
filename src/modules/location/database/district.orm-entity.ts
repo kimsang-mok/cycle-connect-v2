@@ -21,7 +21,7 @@ export class DistrictOrmEntity {
   nameEn: string;
 
   @Column()
-  provinceId: number;
+  provinceCode: number;
 
   @CreateDateColumn()
   createdAt: Date;

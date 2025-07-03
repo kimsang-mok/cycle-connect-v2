@@ -44,4 +44,7 @@ export class BikeOrmEntity {
 
   @Column({ type: 'text', default: '' })
   thumbnailKey: string;
+
+  @Column({ type: 'int' })
+  districtCode: number;
 }
