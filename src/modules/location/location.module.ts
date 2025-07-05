@@ -9,6 +9,7 @@ import { DistrictMapper } from './district.mapper';
 import { DistrictRepository } from './database/adapters/district.repository';
 import { ListDistrictsByProvinceCodeController } from './queries/list-districts-by-province-id/list-districts-by-province-code.controller';
 import { ListDistrictsByProvinceCodeQueryHandler } from './queries/list-districts-by-province-id/list-districts-by-province-code.query-handler';
+import { LocationQueryService } from './queries/shared/location-query.service';
 
 const controllers = [
   ListAllProvincesController,
@@ -19,6 +20,8 @@ const queryHandlers: Provider[] = [
   ListAllProvincesQueryHandler,
   ListDistrictsByProvinceCodeQueryHandler,
 ];
+
+const services: Provider[] = [LocationQueryService];
 
 const repositories: Provider[] = [
   {
@@ -36,6 +39,13 @@ const mappers: Provider[] = [ProvinceMapper, DistrictMapper];
 @Module({
   imports: [CqrsModule],
   controllers: [...controllers],
-  providers: [Logger, ...queryHandlers, ...repositories, ...mappers],
+  providers: [
+    Logger,
+    ...queryHandlers,
+    ...repositories,
+    ...mappers,
+    ...services,
+  ],
+  exports: [LocationQueryService, ...mappers],
 })
 export class LocationModule {}
