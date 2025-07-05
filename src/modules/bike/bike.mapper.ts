@@ -6,6 +6,7 @@ import { Price } from './domain/value-objects/price.value-object';
 import { BikeOrmEntity } from './database/bike.orm-entity';
 import { FILE_URL_RESOLVER } from '@src/libs/uploader/uploader.di-tokens';
 import { FileUrlResolverServicePort } from '@src/libs/uploader/ports/file-url-resolver.service.port';
+import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class BikeMapper
@@ -57,21 +58,24 @@ export class BikeMapper
     return entity;
   }
 
-  toResponse(entity: BikeEntity): BikeResponseDto {
+  toResponse(
+    entity: BikeEntity,
+    options?: ClassTransformOptions,
+  ): BikeResponseDto {
     const props = entity.getProps();
-    const response = new BikeResponseDto(props);
-    response.ownerId = props.ownerId;
-    response.type = props.type;
-    response.model = props.model;
-    response.enginePower = props.enginePower;
-    response.pricePerDay = props.pricePerDay.unpack();
-    response.description = props.description;
-    response.isActive = props.isActive;
-    response.photoUrls = props.photoKeys.map((key) =>
-      this.fileUrlResolver.resolveUrl(key),
-    );
-    response.thumbnailUrl = this.fileUrlResolver.resolveUrl(props.thumbnailKey);
-    response.districtCode = props.districtCode;
-    return response;
+
+    const responseProps = {
+      ...props,
+      pricePerDay: props.pricePerDay.unpack(),
+      photoUrls: props.photoKeys.map((key) =>
+        this.fileUrlResolver.resolveUrl(key),
+      ),
+      thumbnailUrl: this.fileUrlResolver.resolveUrl(props.thumbnailKey),
+    };
+
+    return plainToInstance(BikeResponseDto, responseProps, {
+      excludeExtraneousValues: true,
+      ...options,
+    });
   }
 }

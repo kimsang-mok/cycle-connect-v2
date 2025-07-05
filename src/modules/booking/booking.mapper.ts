@@ -5,6 +5,7 @@ import { BookingResponseDto } from './dtos/booking.response.dto';
 import { RentalPeriod } from '../bike/domain/value-objects/rental-period.value-object';
 import { Price } from '../bike/domain/value-objects/price.value-object';
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class BookingMapper
@@ -46,13 +47,16 @@ export class BookingMapper
 
   toResponse(entity: BookingEntity): BookingResponseDto {
     const props = entity.getProps();
-    const response = new BookingResponseDto(entity);
-    response.bikeId = props.bikeId;
-    response.customerName = props.customerName;
-    response.startDate = props.period.start;
-    response.endDate = props.period.end;
-    response.status = props.status;
-    response.totalPrice = props.totalPrice.unpack();
-    return response;
+
+    const responseProps = {
+      ...props,
+      startDate: props.period.start,
+      endDate: props.period.end,
+      totalPrice: props.totalPrice.unpack(),
+    };
+
+    return plainToInstance(BookingResponseDto, responseProps, {
+      excludeExtraneousValues: true,
+    });
   }
 }

@@ -9,6 +9,7 @@ import { ProvinceOrmEntity } from '../../database/province.orm-entity';
 import { ProvinceMapper } from '../../province.mapper';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { ListResponseDto } from '@src/libs/api';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.location.tag)
@@ -42,6 +43,6 @@ export class ListAllProvincesController {
 
     await this.cacheManager.set(cacheKey, result, 60 * 60 * 24);
 
-    return { data: result };
+    return new ListResponseDto(result);
   }
 }

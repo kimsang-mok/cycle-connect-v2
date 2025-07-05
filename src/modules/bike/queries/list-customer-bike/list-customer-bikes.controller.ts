@@ -10,6 +10,7 @@ import { ListCustomerBikesRequestDto } from './list-customer-bikes.request.dto';
 import { BikeOrmEntity } from '../../database/bike.orm-entity';
 import { ApiOkPaginatedResponse } from '@src/libs/api/decorators';
 import { BikeResponseDto } from '../../dtos/bike.response.dto';
+import { PaginatedResponseDto } from '@src/libs/api';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.bike.tag)
@@ -32,11 +33,14 @@ export class ListCustomerBikesController {
     });
 
     const result: Paginated<BikeOrmEntity> = await this.queryBus.execute(query);
-    return {
+
+    return new PaginatedResponseDto({
       ...result,
       data: result.data.map((ormEntity) =>
-        this.bikeMapper.toResponse(this.bikeMapper.toDomain(ormEntity)),
+        this.bikeMapper.toResponse(this.bikeMapper.toDomain(ormEntity), {
+          groups: ['noRelations'],
+        }),
       ),
-    };
+    });
   }
 }

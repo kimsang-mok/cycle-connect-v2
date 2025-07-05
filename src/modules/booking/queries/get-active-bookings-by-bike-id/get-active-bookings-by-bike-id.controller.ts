@@ -8,6 +8,7 @@ import { BookingMapper } from '../../booking.mapper';
 import { BookingOrmEntity } from '../../database/booking.orm-entity';
 import { ApiOkListResponse } from '@src/libs/api/decorators/api-ok-list-response.decorator';
 import { BookingResponseDto } from '../../dtos/booking.response.dto';
+import { ListResponseDto } from '@src/libs/api';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.booking.tag)
@@ -27,10 +28,10 @@ export class GetActiveBookingsBikeBikeIdController {
 
     const records: BookingOrmEntity[] = await this.queryBus.execute(query);
 
-    return {
-      data: records.map((record) =>
+    return new ListResponseDto(
+      records.map((record) =>
         this.bookingMapper.toResponse(this.bookingMapper.toDomain(record)),
       ),
-    };
+    );
   }
 }

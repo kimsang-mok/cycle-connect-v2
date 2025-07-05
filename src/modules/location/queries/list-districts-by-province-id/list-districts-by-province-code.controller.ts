@@ -10,6 +10,7 @@ import { ApiOkListResponse } from '@src/libs/api/decorators';
 import { DistrictResponseDto } from '../../dtos/district.response.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { ListResponseDto } from '@src/libs/api';
 
 @Controller(routesV1.version)
 @ApiTags(routesV1.location.tag)
@@ -45,8 +46,6 @@ export class ListDistrictsByProvinceCodeController {
 
     await this.cacheManager.set(cacheKey, result, 60 * 60 * 24);
 
-    return {
-      data: result,
-    };
+    return new ListResponseDto(result);
   }
 }

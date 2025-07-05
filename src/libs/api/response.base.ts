@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IdResponse } from './id.response.dto';
+import { Expose, Transform } from 'class-transformer';
 
 export interface BaseResponseProps {
   id: string;
@@ -12,16 +12,24 @@ export interface BaseResponseProps {
  * id, createdAt and updatedAt so we can move them to a
  * separate class and extend it to avoid duplication.
  */
-export class ResponseBase extends IdResponse {
-  constructor(props: BaseResponseProps) {
-    super(props.id);
-    this.createdAt = new Date(props.createdAt).toISOString();
-    this.updatedAt = new Date(props.updatedAt).toISOString();
-  }
+export class ResponseBase {
+  @ApiProperty({ example: '2cdc8ab1-6d50-49cc-ba14-54e4ac7ec231' })
+  @Expose()
+  readonly id: string;
 
   @ApiProperty({ example: '2020-11-24T17:43:15.970Z' })
-  readonly createdAt: string;
+  @Expose()
+  @Transform(
+    ({ value }) => (value instanceof Date ? value.toISOString() : value),
+    { toPlainOnly: true },
+  )
+  createdAt: string;
 
   @ApiProperty({ example: '2020-11-24T17:43:15.970Z' })
-  readonly updatedAt: string;
+  @Expose()
+  @Transform(
+    ({ value }) => (value instanceof Date ? value.toISOString() : value),
+    { toPlainOnly: true },
+  )
+  updatedAt: string;
 }

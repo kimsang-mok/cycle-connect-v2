@@ -6,6 +6,6 @@ export interface Mapper<
   Response = any,
 > {
   toPersistence(entity: DomainEntity): DbRecord;
-  toDomain(record: any): DomainEntity;
-  toResponse(entity: DomainEntity): Response;
+  toDomain(record: DbRecord): DomainEntity;
+  toResponse(entity: DomainEntity, options?: any): Response;
 }

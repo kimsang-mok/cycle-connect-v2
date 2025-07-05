@@ -14,6 +14,7 @@ import { GetBikeByIdQueryHandler } from './queries/get-bike-by-id/get-bike-by-id
 import { ListCustomerBikesController } from './queries/list-customer-bike/list-customer-bikes.controller';
 import { ListCustomerBikesQueryHandler } from './queries/list-customer-bike/list-customer-bikes.query-handler';
 import { UploaderModule } from '@src/libs/uploader/uploader.module';
+import { LocationModule } from '../location/location.module';
 
 const controllers = [
   CreateBikeController,
@@ -41,7 +42,7 @@ const repositories: Provider[] = [
 const mappers: Provider[] = [BikeMapper];
 
 @Module({
-  imports: [CqrsModule, UploaderModule.register()],
+  imports: [CqrsModule, UploaderModule.register(), LocationModule],
   controllers: [...controllers],
   providers: [
     Logger,

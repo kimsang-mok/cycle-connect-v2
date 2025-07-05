@@ -5,6 +5,7 @@ import { UserResponseDto } from './dtos/user.response.dto';
 import { Email } from './domain/value-objects/email.value-object';
 import { Password } from './domain/value-objects/password.value-object';
 import { UserOrmEntity } from './database/user.orm-entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserMapper
@@ -42,11 +43,14 @@ export class UserMapper
 
   toResponse(entity: UserEntity): UserResponseDto {
     const props = entity.getProps();
-    const response = new UserResponseDto(entity);
-    response.email = props.email?.unpack();
-    response.firstName = props.firstName;
-    response.lastName = props.lastName;
-    response.role = props.role;
-    return response;
+
+    const responseProps = {
+      ...props,
+      email: props.email?.unpack(),
+    };
+
+    return plainToInstance(UserResponseDto, responseProps, {
+      excludeExtraneousValues: true,
+    });
   }
 }
