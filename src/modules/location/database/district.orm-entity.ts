@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProvinceOrmEntity } from './province.orm-entity';
 
 @Entity('districts')
 export class DistrictOrmEntity {
@@ -22,6 +25,10 @@ export class DistrictOrmEntity {
 
   @Column()
   provinceCode: number;
+
+  @ManyToOne(() => ProvinceOrmEntity, { eager: false, nullable: false })
+  @JoinColumn({ name: 'province_code', referencedColumnName: 'code' })
+  province: ProvinceOrmEntity;
 
   @CreateDateColumn()
   createdAt: Date;

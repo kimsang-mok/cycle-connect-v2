@@ -13,4 +13,10 @@ export class ProvinceRepository
   constructor() {
     super(new Logger(ProvinceRepository.name));
   }
+
+  async findOneByCode(code: number): Promise<ProvinceOrmEntity | null> {
+    const result = await this.repository.findOne({ where: { code } });
+
+    return result ?? null;
+  }
 }
